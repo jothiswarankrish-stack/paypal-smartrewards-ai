@@ -6,42 +6,54 @@
 @import "ag-grid-community/styles/ag-theme-alpine.css";
 
 :root {
-  --foreground-rgb: 15, 23, 42;
-  --background-rgb: 248, 250, 252;
+  --foreground-rgb: 0, 20, 53;
+  --background-rgb: 245, 247, 250;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
+  color: #001435;
+  background-color: #F5F7FA;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: -0.01em;
 }
 
-/* Custom AG Grid theme enhancements */
+/* PayPal Branded AG Grid Theme */
 .ag-theme-alpine {
-  --ag-header-background-color: #f1f5f9;
-  --ag-header-foreground-color: #1e293b;
-  --ag-row-hover-color: #f8fafc;
-  --ag-selected-row-background-color: #eff6ff;
-  --ag-odd-row-background-color: #ffffff;
-  --ag-border-color: #e2e8f0;
+  --ag-header-background-color: #F5F7FA;
+  --ag-header-foreground-color: #001435;
+  --ag-header-cell-hover-background-color: #EBF3FB;
+  --ag-row-hover-color: #F0F7FD;
+  --ag-selected-row-background-color: #E5F2FC;
+  --ag-odd-row-background-color: #FFFFFF;
+  --ag-border-color: #DDE3EA;
   --ag-font-family: inherit;
-  font-size: 13px;
-  border-radius: 8px;
+  --ag-font-size: 13px;
+  --ag-cell-horizontal-padding: 16px;
+  border-radius: 12px;
   overflow: hidden;
+  border: 1px solid #DDE3EA;
 }
 
-/* Custom scrollbar */
+.ag-theme-alpine .ag-header-cell-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #536477;
+}
+
+/* Subtle scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #F5F7FA;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #CBD5E1;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #94A3B8;
 }

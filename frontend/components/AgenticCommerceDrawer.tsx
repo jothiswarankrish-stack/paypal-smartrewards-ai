@@ -8,9 +8,6 @@ import {
   X,
   Send,
   Sparkles,
-  ArrowRight,
-  TrendingUp,
-  Tag,
   Loader2,
   CheckCircle,
 } from "lucide-react";
@@ -38,7 +35,7 @@ export default function AgenticCommerceDrawer({
   >([
     {
       sender: "agent",
-      text: "Hello! I am your SmartRewards AI Commerce Agent. Tell me what you'd like to buy or how much you want to spend (e.g., 'I want food for ₹500' or 'Get me a taxi discount') and I will find the optimal reward, calculate your net savings, and prepare a PayPal Sandbox checkout for your approval!",
+      text: "Hello! I am your PayPal SmartRewards AI Shopping Copilot. Tell me what you'd like to purchase or your target budget (e.g., 'I want food for ₹500' or 'Find taxi discounts'), and I will scan active partner rewards, compute your exact savings, and prepare a PayPal Sandbox checkout for your approval!",
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
@@ -46,8 +43,8 @@ export default function AgenticCommerceDrawer({
 
   const quickPrompts = [
     "I want food for ₹500",
-    "Find a taxi ride discount under ₹400",
-    "Show shopping deals for ₹2000",
+    "Find taxi discounts under ₹400",
+    "Shopping deals for ₹2000",
     "Save money on grocery essentials",
   ];
 
@@ -71,12 +68,12 @@ export default function AgenticCommerceDrawer({
           orderIntent: response.order_intent,
         },
       ]);
-    } catch (err) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
           sender: "agent",
-          text: "I experienced an error analyzing available deals. Please try asking again!",
+          text: "I experienced an error analyzing active deals. Please try rephrasing your request!",
         },
       ]);
     } finally {
@@ -85,12 +82,11 @@ export default function AgenticCommerceDrawer({
   };
 
   const handleApproveDeal = (deal: DealProposal) => {
-    // Construct dummy coupon object to launch PayPal checkout modal
     const mockCoupon: Coupon = {
       id: deal.coupon_id,
       merchant_id: "agentic-merchant",
       merchant_name: deal.merchant_name,
-      code: "AGENTIC_SMART_DEAL",
+      code: "SMART_COPILOT_DEAL",
       title: deal.coupon_title,
       description: deal.rationale,
       category: "food",
@@ -109,87 +105,87 @@ export default function AgenticCommerceDrawer({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white shadow-2xl border-l border-slate-200 flex flex-col animate-in slide-in-from-right duration-300">
-      {/* Header */}
-      <div className="p-4 border-b border-slate-200 bg-gradient-to-r from-amber-500/10 via-amber-400/20 to-orange-400/10 flex justify-between items-center">
+    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white shadow-2xl border-l border-[#DDE3EA] flex flex-col animate-in slide-in-from-right duration-300">
+      {/* PayPal Branded Drawer Header */}
+      <div className="p-4 border-b border-[#DDE3EA] bg-[#F0F7FD] flex justify-between items-center">
         <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-bold shadow-xs">
-            <Bot className="w-5 h-5 text-slate-900" />
+          <div className="w-9 h-9 rounded-xl bg-[#0070E0] text-white flex items-center justify-center font-bold shadow-xs">
+            <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="font-extrabold text-slate-900 text-sm flex items-center space-x-1.5">
-              <span>Agentic Commerce Copilot</span>
-              <span className="bg-amber-200 text-amber-900 text-[9px] px-1.5 py-0.2 rounded-full uppercase font-black">
-                Autonomous
+            <h3 className="font-extrabold text-[#001435] text-sm flex items-center space-x-1.5">
+              <span>AI Shopping Copilot</span>
+              <span className="bg-[#003087] text-white text-[9px] px-2 py-0.5 rounded-full uppercase font-black">
+                Agentic
               </span>
             </h3>
-            <p className="text-[11px] text-slate-500">Autonomous deal discovery with user approval</p>
+            <p className="text-[11px] text-[#536477]">Autonomous deal discovery with explicit approval</p>
           </div>
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+          className="p-1.5 rounded-full text-[#536477] hover:text-[#001435] hover:bg-white transition"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {/* Chat Messages Surface (Clean White & Light Blue) */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
         {messages.map((m, idx) => (
           <div
             key={idx}
             className={`flex flex-col ${m.sender === "user" ? "items-end" : "items-start"}`}
           >
             <div
-              className={`max-w-[85%] rounded-2xl p-3.5 text-xs ${
+              className={`max-w-[85%] rounded-2xl p-4 text-xs ${
                 m.sender === "user"
-                  ? "bg-[#0079C1] text-white rounded-br-xs"
-                  : "bg-slate-100 text-slate-800 rounded-bl-xs border border-slate-200/80"
+                  ? "bg-[#0070E0] text-white rounded-br-xs shadow-xs font-semibold"
+                  : "bg-[#F0F7FD] text-[#001435] rounded-bl-xs border border-[#BDE0FE]"
               }`}
             >
               <p className="leading-relaxed font-medium">{m.text}</p>
 
-              {/* Suggested Deal Proposals Card */}
+              {/* Deal Comparison Cards */}
               {m.deals && m.deals.length > 0 && (
-                <div className="mt-3 space-y-2.5 pt-2 border-t border-slate-200">
-                  <p className="font-bold text-[11px] text-slate-700 flex items-center space-x-1">
-                    <Sparkles className="w-3 h-3 text-amber-500" />
-                    <span>Top Ranked Deal Proposal:</span>
+                <div className="mt-3.5 space-y-2.5 pt-2.5 border-t border-[#BDE0FE]">
+                  <p className="font-extrabold text-[11px] text-[#003087] flex items-center space-x-1">
+                    <Sparkles className="w-3 h-3 text-[#0070E0]" />
+                    <span>Ranked Deal Proposal:</span>
                   </p>
                   {m.deals.slice(0, 2).map((deal, dIdx) => (
                     <div
                       key={dIdx}
-                      className="p-3 bg-white rounded-xl border border-slate-200 shadow-xs space-y-2 text-slate-900"
+                      className="p-3 bg-white rounded-xl border border-[#DDE3EA] shadow-xs space-y-2 text-[#001435]"
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <span className="text-[10px] font-bold text-[#0079C1] uppercase">
+                          <span className="text-[10px] font-extrabold text-[#0070E0] uppercase tracking-wider">
                             {deal.merchant_name}
                           </span>
                           <h5 className="font-bold text-xs">{deal.coupon_title}</h5>
                         </div>
-                        <span className="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-1.5 py-0.5 rounded">
+                        <span className="bg-[#E3FCEF] text-[#00875A] text-[10px] font-black px-2 py-0.5 rounded-full border border-[#ABF5D1]">
                           {deal.savings_percentage}% OFF
                         </span>
                       </div>
 
-                      <div className="flex justify-between items-baseline text-xs bg-slate-50 p-2 rounded">
-                        <span className="text-slate-500 line-through">₹{deal.original_price}</span>
-                        <span className="font-extrabold text-[#003087] text-sm">
+                      <div className="flex justify-between items-baseline text-xs bg-[#F5F7FA] p-2 rounded-lg">
+                        <span className="text-[#536477] line-through">₹{deal.original_price}</span>
+                        <span className="font-black text-[#003087] text-sm">
                           ₹{deal.final_price}
                         </span>
-                        <span className="text-emerald-600 font-bold text-[11px]">
+                        <span className="text-[#00875A] font-bold text-[11px]">
                           Save ₹{deal.discount_amount}
                         </span>
                       </div>
 
-                      {/* Explicit User Approval Button */}
+                      {/* Explicit User Approval Button (PayPal Gold) */}
                       <button
                         onClick={() => handleApproveDeal(deal)}
-                        className="w-full bg-[#ffc439] hover:bg-[#f4bb34] text-slate-900 font-black py-2 px-3 rounded-lg text-xs transition flex items-center justify-center space-x-1.5 border border-amber-400 shadow-xs"
+                        className="w-full bg-[#FFC439] hover:bg-[#F2B82E] text-[#001435] font-black py-2.5 px-3 rounded-full text-xs transition flex items-center justify-center space-x-1.5 border border-[#E5AD24] shadow-xs"
                       >
-                        <CheckCircle className="w-3.5 h-3.5 text-slate-900" />
+                        <CheckCircle className="w-3.5 h-3.5 text-[#001435]" />
                         <span>Approve & Checkout with PayPal</span>
                       </button>
                     </div>
@@ -201,28 +197,28 @@ export default function AgenticCommerceDrawer({
         ))}
 
         {isLoading && (
-          <div className="flex items-center space-x-2 text-xs text-slate-400 p-2">
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
+          <div className="flex items-center space-x-2 text-xs text-[#536477] p-2 bg-[#F0F7FD] rounded-xl border border-[#BDE0FE]">
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0070E0]" />
             <span>AI Copilot is analyzing coupons and calculating discounts...</span>
           </div>
         )}
       </div>
 
-      {/* Quick Prompts */}
-      <div className="px-4 py-2 border-t border-slate-100 bg-slate-50 flex flex-wrap gap-1.5">
+      {/* Suggested Quick Prompts */}
+      <div className="px-4 py-2.5 border-t border-[#DDE3EA] bg-[#F5F7FA] flex flex-wrap gap-1.5">
         {quickPrompts.map((p, idx) => (
           <button
             key={idx}
             onClick={() => handleSendMessage(p)}
-            className="text-[10px] bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 px-2.5 py-1 rounded-full transition"
+            className="text-[10px] bg-white border border-[#DDE3EA] text-[#536477] hover:text-[#001435] hover:bg-[#EBF3FB] px-3 py-1 rounded-full transition font-semibold"
           >
             {p}
           </button>
         ))}
       </div>
 
-      {/* Input Form */}
-      <div className="p-3 border-t border-slate-200 bg-white">
+      {/* Message Input Box */}
+      <div className="p-3.5 border-t border-[#DDE3EA] bg-white">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -235,12 +231,12 @@ export default function AgenticCommerceDrawer({
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             placeholder="E.g., I want to order food for ₹500..."
-            className="flex-1 py-2 px-3.5 text-xs border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className="flex-1 py-2.5 px-4 text-xs border border-[#DDE3EA] rounded-full focus:outline-none focus:ring-2 focus:ring-[#0070E0] text-[#001435] bg-[#F5F7FA]"
           />
           <button
             type="submit"
             disabled={!inputMessage.trim() || isLoading}
-            className="p-2 bg-[#0079C1] hover:bg-[#005ea6] disabled:opacity-50 text-white rounded-xl transition"
+            className="p-2.5 bg-[#0070E0] hover:bg-[#003087] disabled:opacity-50 text-white rounded-full transition shadow-xs"
           >
             <Send className="w-4 h-4" />
           </button>

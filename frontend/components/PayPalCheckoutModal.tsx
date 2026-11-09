@@ -11,8 +11,6 @@ import {
   Loader2,
   Lock,
   ArrowRight,
-  ExternalLink,
-  Sparkles,
   Receipt,
 } from "lucide-react";
 
@@ -46,7 +44,6 @@ export default function PayPalCheckoutModal({
   const [completedPayment, setCompletedPayment] = useState<PayPalCaptureResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Set default initial cart amount based on coupon
   useEffect(() => {
     if (coupon) {
       const initial = Math.max(coupon.min_order_amount || 400, 600);
@@ -84,7 +81,7 @@ export default function PayPalCheckoutModal({
     setErrorMessage(null);
 
     try {
-      // 1. Backend creates official PayPal Sandbox Order via Orders API v2
+      // 1. Backend creates PayPal Sandbox Order via Orders API v2
       const orderResp = await createPayPalOrder(
         currentUser.id,
         coupon.id,
@@ -123,23 +120,23 @@ export default function PayPalCheckoutModal({
   if (!isOpen || !coupon) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#001435]/60 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-[#DDE3EA] animate-in fade-in zoom-in-95 duration-200">
         
-        {/* Modal Header */}
-        <div className="bg-gradient-to-r from-[#003087] to-[#0079C1] p-5 text-white flex justify-between items-center">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center font-black text-lg">
-              P
+        {/* Authentic PayPal Navy Header */}
+        <div className="bg-[#003087] p-5 text-white flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-xs">
+              <span className="font-black text-xl italic text-[#003087]">P</span>
             </div>
             <div>
               <div className="flex items-center space-x-1.5">
-                <span className="font-extrabold text-base">PayPal Checkout</span>
-                <span className="bg-amber-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded uppercase">
+                <span className="font-extrabold text-base tracking-tight">PayPal Checkout</span>
+                <span className="bg-[#FFC439] text-[#001435] text-[10px] font-black px-2 py-0.5 rounded uppercase">
                   Sandbox
                 </span>
               </div>
-              <p className="text-xs text-blue-100">SmartRewards AI Verified Merchant Discount</p>
+              <p className="text-xs text-[#E5F2FC]">SmartRewards AI Verified Merchant Discount</p>
             </div>
           </div>
           <button
@@ -150,7 +147,7 @@ export default function PayPalCheckoutModal({
           </button>
         </div>
 
-        {/* Modal Body */}
+        {/* Modal Content */}
         <div className="p-6">
           {errorMessage && (
             <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start space-x-2">
@@ -163,53 +160,52 @@ export default function PayPalCheckoutModal({
           {activeStep === "review" && (
             <div className="space-y-5">
               {/* Selected Offer Card */}
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div className="p-4 rounded-xl bg-[#F5F7FA] border border-[#DDE3EA]">
                 <div className="flex justify-between items-start">
                   <div>
-                    <span className="text-[11px] font-bold text-[#0079C1] uppercase tracking-wider">
+                    <span className="text-[11px] font-extrabold text-[#0070E0] uppercase tracking-wider">
                       {coupon.merchant_name || "Merchant Reward"}
                     </span>
-                    <h4 className="font-bold text-slate-900 text-sm mt-0.5">{coupon.title}</h4>
+                    <h4 className="font-bold text-[#001435] text-sm mt-0.5">{coupon.title}</h4>
                   </div>
-                  <div className="bg-emerald-100 text-emerald-800 font-extrabold text-xs px-2.5 py-1 rounded-full border border-emerald-300">
+                  <div className="bg-[#E5F2FC] text-[#003087] font-black text-xs px-2.5 py-1 rounded-full border border-[#BDE0FE]">
                     {coupon.discount_type === "percentage" ? `${coupon.discount_value}% OFF` : `₹${coupon.discount_value} OFF`}
                   </div>
                 </div>
-                <div className="mt-2 text-xs text-slate-600 font-mono bg-white p-2 rounded border border-slate-200 flex justify-between">
-                  <span>PROMO CODE:</span>
-                  <span className="font-bold text-slate-900">{coupon.code}</span>
+                <div className="mt-2.5 text-xs text-[#536477] font-mono bg-white p-2.5 rounded-lg border border-[#DDE3EA] flex justify-between items-center">
+                  <span className="font-sans font-bold text-[11px] text-[#536477]">PROMO CODE:</span>
+                  <span className="font-bold text-[#001435]">{coupon.code}</span>
                 </div>
               </div>
 
               {/* Order Amount Selector */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5 flex justify-between">
-                  <span>Order Cart Amount (INR / USD equivalent)</span>
-                  <span className="text-slate-400 font-normal">Min purchase: ₹{coupon.min_order_amount}</span>
+                <label className="block text-xs font-bold text-[#001435] mb-1.5 flex justify-between">
+                  <span>Order Cart Amount (INR / USD)</span>
+                  <span className="text-[#536477] font-normal">Min purchase: ₹{coupon.min_order_amount}</span>
                 </label>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2.5">
                   <div className="relative flex-1">
-                    <span className="absolute left-3 top-2.5 text-slate-400 font-bold text-sm">₹</span>
+                    <span className="absolute left-3.5 top-2.5 text-[#536477] font-bold text-sm">₹</span>
                     <input
                       type="number"
                       min={coupon.min_order_amount || 50}
                       step="50"
                       value={cartAmount}
                       onChange={(e) => handleAmountChange(parseFloat(e.target.value) || 0)}
-                      className="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0079C1]"
+                      className="w-full pl-8 pr-3 py-2 border border-[#DDE3EA] rounded-xl text-sm font-bold text-[#001435] focus:outline-none focus:ring-2 focus:ring-[#0070E0] bg-[#F5F7FA]"
                     />
                   </div>
-                  {/* Quick amount presets */}
                   <div className="flex space-x-1">
                     {[500, 1000, 2000].map((preset) => (
                       <button
                         key={preset}
                         type="button"
                         onClick={() => handleAmountChange(preset)}
-                        className={`text-xs px-2.5 py-2 rounded-lg border font-medium ${
+                        className={`text-xs px-3 py-2 rounded-xl border font-bold ${
                           cartAmount === preset
-                            ? "bg-slate-900 text-white border-slate-900"
-                            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                            ? "bg-[#003087] text-white border-[#003087]"
+                            : "bg-white text-[#001435] border-[#DDE3EA] hover:bg-[#F5F7FA]"
                         }`}
                       >
                         ₹{preset}
@@ -219,38 +215,38 @@ export default function PayPalCheckoutModal({
                 </div>
               </div>
 
-              {/* Price Breakdown Calculation */}
-              <div className="p-4 rounded-xl bg-slate-900 text-white space-y-2.5">
-                <div className="flex justify-between text-xs text-slate-400">
-                  <span>Subtotal Amount:</span>
-                  <span className="font-mono text-slate-200">₹{cartAmount.toFixed(2)}</span>
+              {/* PayPal Price Breakdown (Clean Light Blue Surface) */}
+              <div className="p-4 rounded-xl bg-[#F0F7FD] border border-[#BDE0FE] space-y-2.5">
+                <div className="flex justify-between text-xs text-[#536477]">
+                  <span>Subtotal:</span>
+                  <span className="font-mono font-medium text-[#001435]">₹{cartAmount.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-xs text-emerald-400 font-semibold">
-                  <span>SmartRewards Verified Discount:</span>
+                <div className="flex justify-between text-xs text-[#00875A] font-bold">
+                  <span>SmartRewards Discount:</span>
                   <span className="font-mono">
                     -₹{validationResult?.discount_amount ? validationResult.discount_amount.toFixed(2) : "0.00"}
                   </span>
                 </div>
-                <div className="border-t border-slate-800 pt-2 flex justify-between items-baseline">
-                  <span className="text-sm font-bold">Total Payable with PayPal:</span>
-                  <span className="text-xl font-extrabold text-amber-300 font-mono">
+                <div className="border-t border-[#DDE3EA] pt-2 flex justify-between items-baseline">
+                  <span className="text-sm font-extrabold text-[#001435]">Total Payable with PayPal:</span>
+                  <span className="text-2xl font-black text-[#003087] font-mono">
                     ₹{validationResult?.final_amount ? validationResult.final_amount.toFixed(2) : cartAmount.toFixed(2)}
                   </span>
                 </div>
               </div>
 
-              {/* Eligibility Notice */}
+              {/* Server Validation Message */}
               {validationResult && (
-                <p className={`text-xs text-center font-medium ${validationResult.is_eligible ? "text-emerald-600" : "text-amber-600"}`}>
+                <p className={`text-xs text-center font-bold ${validationResult.is_eligible ? "text-[#00875A]" : "text-amber-700"}`}>
                   {validationResult.message}
                 </p>
               )}
 
-              {/* Action Button: Create PayPal Sandbox Order */}
+              {/* Action Button: Create PayPal Order */}
               <button
                 onClick={handleInitiatePayPalOrder}
                 disabled={!validationResult?.is_eligible || isProcessing || isValidating}
-                className="w-full bg-[#0079C1] hover:bg-[#005ea6] disabled:opacity-50 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-sm"
+                className="w-full bg-[#0070E0] hover:bg-[#003087] disabled:opacity-50 text-white font-extrabold py-3.5 px-4 rounded-full shadow-xs transition flex items-center justify-center space-x-2 text-sm"
               >
                 {isProcessing ? (
                   <>
@@ -270,110 +266,110 @@ export default function PayPalCheckoutModal({
           {/* STEP 2: PAYPAL SANDBOX APPROVAL & CAPTURE */}
           {activeStep === "paypal_approval" && (
             <div className="space-y-5 text-center py-2">
-              <div className="w-14 h-14 bg-blue-50 text-[#0079C1] rounded-full mx-auto flex items-center justify-center">
+              <div className="w-14 h-14 bg-[#E5F2FC] text-[#0070E0] rounded-full mx-auto flex items-center justify-center border border-[#BDE0FE]">
                 <Lock className="w-7 h-7" />
               </div>
 
               <div>
-                <h3 className="font-extrabold text-slate-900 text-base">PayPal Sandbox Checkout Ready</h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  Server generated PayPal Order: <code className="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-bold">{createdOrderId}</code>
+                <h3 className="font-extrabold text-[#001435] text-base">PayPal Sandbox Approval Ready</h3>
+                <p className="text-xs text-[#536477] mt-1">
+                  Server-generated PayPal Order ID: <code className="bg-[#F5F7FA] border border-[#DDE3EA] px-1.5 py-0.5 rounded text-[#003087] font-bold">{createdOrderId}</code>
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-left text-xs space-y-2">
+              <div className="p-4 rounded-xl bg-[#F5F7FA] border border-[#DDE3EA] text-left text-xs space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Merchant:</span>
-                  <span className="font-bold text-slate-900">{coupon.merchant_name}</span>
+                  <span className="text-[#536477]">Merchant Partner:</span>
+                  <span className="font-bold text-[#001435]">{coupon.merchant_name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Coupon Discount Applied:</span>
-                  <span className="font-bold text-emerald-600 font-mono">
+                  <span className="text-[#536477]">Verified Discount:</span>
+                  <span className="font-bold text-[#00875A] font-mono">
                     -₹{validationResult?.discount_amount.toFixed(2)}
                   </span>
                 </div>
-                <div className="flex justify-between border-t border-slate-200 pt-1.5 font-bold text-slate-900">
-                  <span>Amount to Authorize:</span>
-                  <span className="font-mono text-blue-700">₹{validationResult?.final_amount.toFixed(2)}</span>
+                <div className="flex justify-between border-t border-[#DDE3EA] pt-2 font-extrabold text-[#001435]">
+                  <span>Authorized Charge:</span>
+                  <span className="font-mono text-[#003087] text-sm">₹{validationResult?.final_amount.toFixed(2)}</span>
                 </div>
               </div>
 
+              {/* Official PayPal Gold Button */}
               <div className="space-y-2.5">
-                {/* Simulated / Real Sandbox Approval Button */}
                 <button
                   onClick={handleApproveAndCapture}
                   disabled={isProcessing}
-                  className="w-full bg-[#ffc439] hover:bg-[#f4bb34] text-slate-900 font-black py-3.5 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-sm border border-amber-400"
+                  className="w-full bg-[#FFC439] hover:bg-[#F2B82E] text-[#001435] font-black py-3.5 px-4 rounded-full shadow-xs transition flex items-center justify-center space-x-2 text-sm border border-[#E5AD24]"
                 >
                   {isProcessing ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin text-slate-900" />
+                      <Loader2 className="w-4 h-4 animate-spin text-[#003087]" />
                       <span>Verifying & Capturing Payment...</span>
                     </>
                   ) : (
                     <>
-                      <span className="text-[#003087] font-black italic">PayPal</span>
-                      <span>Approve & Complete Payment (Sandbox)</span>
+                      <span className="text-[#003087] font-black italic text-base">PayPal</span>
+                      <span className="font-bold">Approve & Complete Payment (Sandbox)</span>
                     </>
                   )}
                 </button>
 
-                <p className="text-[11px] text-slate-400">
-                  Runs official server-to-server <code>POST /v2/checkout/orders/{'{id}'}/capture</code>
+                <p className="text-[11px] text-[#536477]">
+                  Executes authentic server-to-server <code>POST /v2/checkout/orders/{'{id}'}/capture</code>
                 </p>
               </div>
             </div>
           )}
 
-          {/* STEP 3: PAYMENT CAPTURE CONFIRMED & VERIFIED RECEIPT */}
+          {/* STEP 3: PAYMENT CAPTURED CONFIRMATION & VERIFIED RECEIPT */}
           {activeStep === "completed" && completedPayment && (
             <div className="space-y-5 text-center py-2 animate-in fade-in">
-              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full mx-auto flex items-center justify-center shadow-inner">
+              <div className="w-16 h-16 bg-[#E3FCEF] text-[#00875A] rounded-full mx-auto flex items-center justify-center border border-[#ABF5D1]">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
 
               <div>
-                <h3 className="font-extrabold text-slate-900 text-lg">Payment Verified & Captured!</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Your coupon reward has been recorded on the blockchain/database ledger.
+                <h3 className="font-extrabold text-[#001435] text-lg">Payment Verified & Captured</h3>
+                <p className="text-xs text-[#536477] mt-0.5">
+                  Coupon discount applied and verified through the PayPal Developer Platform.
                 </p>
               </div>
 
               {/* Verified Digital Receipt */}
-              <div className="p-4 rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100 border border-slate-200 text-left text-xs space-y-2.5 shadow-xs">
-                <div className="flex items-center space-x-2 pb-2 border-b border-slate-200 text-slate-800 font-bold">
-                  <Receipt className="w-4 h-4 text-emerald-600" />
+              <div className="p-4 rounded-2xl bg-[#F5F7FA] border border-[#DDE3EA] text-left text-xs space-y-2.5 shadow-2xs">
+                <div className="flex items-center space-x-2 pb-2 border-b border-[#DDE3EA] text-[#001435] font-bold">
+                  <Receipt className="w-4 h-4 text-[#00875A]" />
                   <span>Verified PayPal Sandbox Receipt</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Capture ID:</span>
-                  <span className="font-mono font-bold text-slate-900">{completedPayment.capture_id}</span>
+                  <span className="text-[#536477]">Capture ID:</span>
+                  <span className="font-mono font-bold text-[#001435]">{completedPayment.capture_id}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Order ID:</span>
-                  <span className="font-mono text-slate-700">{completedPayment.order_id}</span>
+                  <span className="text-[#536477]">Order ID:</span>
+                  <span className="font-mono text-[#536477]">{completedPayment.order_id}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Payer Account:</span>
-                  <span className="font-medium text-slate-800">{completedPayment.payer_email}</span>
+                  <span className="text-[#536477]">Payer Account:</span>
+                  <span className="font-medium text-[#001435]">{completedPayment.payer_email}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Verified Savings:</span>
-                  <span className="font-mono font-bold text-emerald-600">
+                  <span className="text-[#536477]">Verified Savings:</span>
+                  <span className="font-mono font-bold text-[#00875A]">
                     +₹{completedPayment.discount_saved.toFixed(2)}
                   </span>
                 </div>
-                <div className="flex justify-between border-t border-slate-200 pt-2 font-bold text-slate-900 text-sm">
+                <div className="flex justify-between border-t border-[#DDE3EA] pt-2 font-black text-[#001435] text-sm">
                   <span>Total Paid:</span>
-                  <span className="font-mono text-blue-700">₹{completedPayment.final_amount.toFixed(2)}</span>
+                  <span className="font-mono text-[#003087]">₹{completedPayment.final_amount.toFixed(2)}</span>
                 </div>
               </div>
 
               <button
                 onClick={onClose}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition text-sm"
+                className="w-full bg-[#003087] hover:bg-[#002060] text-white font-extrabold py-3 px-4 rounded-full shadow-xs transition text-sm"
               >
-                Back to Dashboard & Savings
+                Return to Dashboard
               </button>
             </div>
           )}

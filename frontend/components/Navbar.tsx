@@ -15,119 +15,94 @@ interface NavbarProps {
 export default function Navbar({
   activeTab,
   setActiveTab,
-  currentUser,
   toggleAgent,
   isAgentOpen,
 }: NavbarProps) {
+  const navItems = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "recommendations", label: "AI Rewards", icon: Sparkles, badge: "Personalized" },
+    { id: "marketplace", label: "Coupons", icon: Ticket },
+    { id: "analytics", label: "Analytics", icon: BarChart3 },
+    { id: "merchant", label: "Merchant Portal", icon: Store },
+    { id: "admin", label: "Admin Operations", icon: Shield },
+  ];
+
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
+    <header className="sticky top-0 z-40 bg-white border-b border-[#DDE3EA] shadow-2xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          {/* Logo & Brand */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab("dashboard")}>
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-[#003087] via-[#0079C1] to-[#00CF92] flex items-center justify-center text-white font-black text-xl shadow-md">
-              P
+        <div className="flex justify-between h-18 items-center">
+          {/* Logo & Brand: Recognizable PayPal Identity */}
+          <div
+            className="flex items-center space-x-3 cursor-pointer py-1"
+            onClick={() => setActiveTab("dashboard")}
+          >
+            {/* PayPal Double-P Inspired Monogram */}
+            <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#003087] via-[#0070E0] to-[#009CDE] flex items-center justify-center text-white font-black text-xl shadow-xs">
+                <span className="italic font-extrabold tracking-tighter">P</span>
+              </div>
             </div>
+
             <div>
-              <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-slate-900 text-lg tracking-tight">PayPal</span>
-                <span className="font-bold text-[#0079C1] text-lg">SmartRewards</span>
-                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+              <div className="flex items-center space-x-1.5 leading-none">
+                <span className="font-extrabold text-[#003087] text-xl tracking-tight">PayPal</span>
+                <span className="font-bold text-[#0070E0] text-xl tracking-tight">SmartRewards</span>
+                <span className="bg-[#E5F2FC] text-[#0070E0] border border-[#BDE0FE] text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider ml-1">
                   AI 2026
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 font-medium">Personalized AI Discounts & Sandbox Checkout</p>
+              <p className="text-[11px] text-[#536477] font-medium mt-1">
+                Personalized Financial Benefits & Sandbox Checkout
+              </p>
             </div>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex space-x-1 lg:space-x-2">
-            <button
-              onClick={() => setActiveTab("dashboard")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                activeTab === "dashboard"
-                  ? "bg-slate-900 text-white shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Insights</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("recommendations")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                activeTab === "recommendations"
-                  ? "bg-[#0079C1] text-white shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              <span>AI Recommendations</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("marketplace")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                activeTab === "marketplace"
-                  ? "bg-slate-900 text-white shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
-            >
-              <Ticket className="w-4 h-4" />
-              <span>Coupons</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("analytics")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                activeTab === "analytics"
-                  ? "bg-purple-900 text-white shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
-            >
-              <BarChart3 className="w-4 h-4 text-purple-300" />
-              <span>AG Grid Analytics</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("merchant")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                activeTab === "merchant"
-                  ? "bg-emerald-700 text-white shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
-            >
-              <Store className="w-4 h-4" />
-              <span>Merchant Portal</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("admin")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                activeTab === "admin"
-                  ? "bg-slate-900 text-white shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
-            >
-              <Shield className="w-4 h-4 text-rose-400" />
-              <span>Admin Operations</span>
-            </button>
+          {/* Navigation Links (PayPal style) */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center space-x-2 px-3.5 py-2 rounded-full text-xs font-bold transition-all ${
+                    isActive
+                      ? "bg-[#003087] text-white shadow-xs"
+                      : "text-[#536477] hover:text-[#001435] hover:bg-[#F5F7FA]"
+                  }`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-white" : "text-[#536477]"}`} />
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span
+                      className={`text-[9px] font-extrabold px-1.5 py-0.2 rounded-full uppercase ${
+                        isActive
+                          ? "bg-[#0070E0] text-white"
+                          : "bg-[#E5F2FC] text-[#0070E0]"
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </nav>
 
-          {/* Right Action: Agentic Commerce Copilot Button */}
+          {/* Right Action: AI Shopping Copilot Button */}
           <div className="flex items-center space-x-3">
             <button
               onClick={toggleAgent}
-              className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs border ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs font-bold transition-all border ${
                 isAgentOpen
-                  ? "bg-amber-400 text-slate-900 border-amber-500 shadow-md ring-2 ring-amber-300/50"
-                  : "bg-gradient-to-r from-amber-50 to-orange-50 text-amber-900 border-amber-200 hover:bg-amber-100"
+                  ? "bg-[#0070E0] text-white border-[#0070E0] shadow-sm ring-2 ring-[#009CDE]/40"
+                  : "bg-[#F0F7FD] text-[#003087] border-[#DDE3EA] hover:bg-[#E5F2FC] hover:border-[#0070E0]"
               }`}
             >
-              <Bot className="w-4 h-4 text-amber-600 animate-pulse" />
+              <Bot className={`w-4 h-4 ${isAgentOpen ? "text-white animate-pulse" : "text-[#0070E0]"}`} />
               <span className="hidden sm:inline">AI Shopping Copilot</span>
-              <span className="bg-amber-200 text-amber-900 text-[10px] px-1.5 py-0.5 rounded-full font-extrabold">
+              <span className="bg-[#009CDE] text-white text-[9px] px-1.5 py-0.2 rounded-full font-black uppercase">
                 Agentic
               </span>
             </button>

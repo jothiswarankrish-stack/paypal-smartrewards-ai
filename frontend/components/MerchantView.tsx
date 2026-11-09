@@ -9,16 +9,13 @@ import {
   toggleCouponStatus,
 } from "../lib/api";
 import {
-  Store,
   Plus,
   Ticket,
   TrendingUp,
   Receipt,
-  Users,
   CheckCircle,
   X,
   Loader2,
-  Power,
 } from "lucide-react";
 
 interface MerchantViewProps {
@@ -37,12 +34,10 @@ export default function MerchantView({ currentUser }: MerchantViewProps) {
   const [code, setCode] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("food");
   const [discountType, setDiscountType] = useState<"percentage" | "fixed">("percentage");
   const [discountValue, setDiscountValue] = useState<number>(20);
   const [minOrder, setMinOrder] = useState<number>(400);
   const [maxDiscount, setMaxDiscount] = useState<number>(150);
-  const [usageLimit, setUsageLimit] = useState<number>(500);
 
   useEffect(() => {
     loadMerchantData();
@@ -79,13 +74,13 @@ export default function MerchantView({ currentUser }: MerchantViewProps) {
         code: code.trim().toUpperCase(),
         title: title.trim(),
         description: description.trim(),
-        category: category.toLowerCase(),
+        category: "food",
         discount_type: discountType,
         discount_value: Number(discountValue),
         min_order_amount: Number(minOrder),
         max_discount: discountType === "percentage" ? Number(maxDiscount) : null,
         expiry_date: expiry.toISOString(),
-        usage_limit: Number(usageLimit),
+        usage_limit: 500,
       });
 
       setIsModalOpen(false);
@@ -118,102 +113,102 @@ export default function MerchantView({ currentUser }: MerchantViewProps) {
 
   if (isLoading) {
     return (
-      <div className="py-20 text-center text-slate-400">
-        <Loader2 className="w-6 h-6 animate-spin mx-auto text-[#0079C1] mb-2" />
-        <p className="text-xs">Loading merchant portal dashboard...</p>
+      <div className="py-24 text-center text-[#536477]">
+        <Loader2 className="w-7 h-7 animate-spin mx-auto text-[#0070E0] mb-2" />
+        <p className="text-xs font-semibold">Loading merchant rewards dashboard...</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Merchant Header */}
-      <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      {/* Merchant Header (PayPal Clean White Card) */}
+      <div className="p-7 bg-white rounded-2xl border border-[#DDE3EA] shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
-              Verified Merchant Partner
+            <span className="bg-[#E5F2FC] text-[#003087] text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase border border-[#BDE0FE]">
+              Verified PayPal Partner
             </span>
-            <span className="text-xs text-slate-400 font-medium capitalize">
+            <span className="text-xs text-[#536477] font-medium capitalize">
               Industry: {stats?.category}
             </span>
           </div>
-          <h2 className="text-2xl font-black text-slate-900 mt-1">
+          <h2 className="text-2xl font-black text-[#001435] mt-1.5">
             {stats?.business_name || "Merchant Rewards Portal"}
           </h2>
-          <p className="text-xs text-slate-500">
-            Create high-intent personalized discount campaigns redeemable via PayPal
+          <p className="text-xs text-[#536477]">
+            Create high-intent reward campaigns redeemable via PayPal Sandbox Checkout
           </p>
         </div>
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl shadow-xs transition flex items-center space-x-2 text-xs"
+          className="bg-[#0070E0] hover:bg-[#003087] text-white font-extrabold px-5 py-2.5 rounded-full shadow-xs transition flex items-center space-x-2 text-xs"
         >
           <Plus className="w-4 h-4" />
           <span>Create New Coupon</span>
         </button>
       </div>
 
-      {/* Stats Cards */}
+      {/* Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex justify-between items-center text-slate-400 text-xs font-semibold">
+        <div className="p-5 bg-white rounded-2xl border border-[#DDE3EA] shadow-xs">
+          <div className="flex justify-between items-center text-[#536477] text-xs font-bold">
             <span>Active Coupons</span>
-            <Ticket className="w-4 h-4 text-emerald-600" />
+            <Ticket className="w-4 h-4 text-[#0070E0]" />
           </div>
-          <p className="text-2xl font-black text-slate-900 mt-2 font-mono">
+          <p className="text-2xl font-black text-[#001435] mt-2 font-mono">
             {stats?.active_coupons_count || 0}
           </p>
-          <span className="text-[11px] text-slate-500 font-medium">Live on marketplace</span>
+          <span className="text-[11px] text-[#536477] font-medium">Live on marketplace</span>
         </div>
 
-        <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex justify-between items-center text-slate-400 text-xs font-semibold">
+        <div className="p-5 bg-white rounded-2xl border border-[#DDE3EA] shadow-xs">
+          <div className="flex justify-between items-center text-[#536477] text-xs font-bold">
             <span>Total Redemptions</span>
-            <CheckCircle className="w-4 h-4 text-blue-600" />
+            <CheckCircle className="w-4 h-4 text-[#00875A]" />
           </div>
-          <p className="text-2xl font-black text-slate-900 mt-2 font-mono">
+          <p className="text-2xl font-black text-[#001435] mt-2 font-mono">
             {stats?.total_redemptions || 0}
           </p>
-          <span className="text-[11px] text-blue-600 font-bold">Successful checkouts</span>
+          <span className="text-[11px] text-[#00875A] font-bold">Captured via PayPal</span>
         </div>
 
-        <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex justify-between items-center text-slate-400 text-xs font-semibold">
-            <span>Sales Volume Generated</span>
-            <Receipt className="w-4 h-4 text-purple-600" />
+        <div className="p-5 bg-white rounded-2xl border border-[#DDE3EA] shadow-xs">
+          <div className="flex justify-between items-center text-[#536477] text-xs font-bold">
+            <span>Generated Sales Volume</span>
+            <Receipt className="w-4 h-4 text-[#003087]" />
           </div>
-          <p className="text-2xl font-black text-slate-900 mt-2 font-mono">
+          <p className="text-2xl font-black text-[#001435] mt-2 font-mono">
             ₹{stats?.total_sales_generated.toLocaleString() || "0"}
           </p>
-          <span className="text-[11px] text-purple-600 font-bold">PayPal GMV</span>
+          <span className="text-[11px] text-[#0070E0] font-bold">Gross Merchandise Value</span>
         </div>
 
-        <div className="p-5 bg-white rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex justify-between items-center text-slate-400 text-xs font-semibold">
-            <span>Conversion Rate</span>
+        <div className="p-5 bg-white rounded-2xl border border-[#DDE3EA] shadow-xs">
+          <div className="flex justify-between items-center text-[#536477] text-xs font-bold">
+            <span>Campaign Conversion Rate</span>
             <TrendingUp className="w-4 h-4 text-amber-600" />
           </div>
-          <p className="text-2xl font-black text-slate-900 mt-2 font-mono">
+          <p className="text-2xl font-black text-[#001435] mt-2 font-mono">
             {stats?.conversion_rate || 0}%
           </p>
-          <span className="text-[11px] text-amber-600 font-bold">Impression to capture</span>
+          <span className="text-[11px] text-amber-600 font-bold">Impression-to-Capture</span>
         </div>
       </div>
 
       {/* Active Coupons Management Table */}
-      <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-xs">
-        <h3 className="font-extrabold text-slate-900 text-sm mb-4">
-          Manage Merchant Discount Offers
+      <div className="p-6 bg-white rounded-2xl border border-[#DDE3EA] shadow-xs">
+        <h3 className="font-extrabold text-[#001435] text-sm mb-4">
+          Active Merchant Campaigns
         </h3>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-slate-200 text-slate-400 text-[11px] uppercase tracking-wider">
+              <tr className="border-b border-[#DDE3EA] text-[#536477] text-[11px] uppercase tracking-wider">
                 <th className="pb-3 font-bold">Promo Code</th>
-                <th className="pb-3 font-bold">Offer Title</th>
+                <th className="pb-3 font-bold">Campaign Title</th>
                 <th className="pb-3 font-bold">Discount</th>
                 <th className="pb-3 font-bold">Min Spend</th>
                 <th className="pb-3 font-bold">Times Used</th>
@@ -221,34 +216,34 @@ export default function MerchantView({ currentUser }: MerchantViewProps) {
                 <th className="pb-3 font-bold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#DDE3EA]">
               {coupons.map((c) => (
-                <tr key={c.id} className="hover:bg-slate-50 transition">
-                  <td className="py-3 font-mono font-bold text-slate-900">{c.code}</td>
-                  <td className="py-3 font-medium text-slate-800">{c.title}</td>
-                  <td className="py-3 font-bold text-emerald-600">
+                <tr key={c.id} className="hover:bg-[#F5F7FA] transition">
+                  <td className="py-3.5 font-mono font-bold text-[#003087]">{c.code}</td>
+                  <td className="py-3.5 font-medium text-[#001435]">{c.title}</td>
+                  <td className="py-3.5 font-bold text-[#00875A]">
                     {c.discount_type === "percentage" ? `${c.discount_value}%` : `₹${c.discount_value}`}
                   </td>
-                  <td className="py-3 text-slate-600">₹{c.min_order_amount}</td>
-                  <td className="py-3 text-slate-600">
+                  <td className="py-3.5 text-[#536477]">₹{c.min_order_amount}</td>
+                  <td className="py-3.5 text-[#536477]">
                     {c.times_used} / {c.usage_limit}
                   </td>
-                  <td className="py-3">
+                  <td className="py-3.5">
                     <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        c.is_active ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-500"
+                      className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
+                        c.is_active ? "bg-[#E3FCEF] text-[#00875A]" : "bg-[#F5F7FA] text-[#536477]"
                       }`}
                     >
                       {c.is_active ? "Active" : "Paused"}
                     </span>
                   </td>
-                  <td className="py-3 text-right">
+                  <td className="py-3.5 text-right">
                     <button
                       onClick={() => handleToggle(c.id)}
-                      className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition ${
+                      className={`text-[11px] font-bold px-3 py-1 rounded-full border transition ${
                         c.is_active
                           ? "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100"
-                          : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                          : "bg-[#E5F2FC] text-[#0070E0] border-[#BDE0FE] hover:bg-[#F0F7FD]"
                       }`}
                     >
                       {c.is_active ? "Pause" : "Activate"}
@@ -263,12 +258,12 @@ export default function MerchantView({ currentUser }: MerchantViewProps) {
 
       {/* Create Coupon Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
-            <div className="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-              <h3 className="font-extrabold text-slate-900 text-sm">Create New Reward Coupon</h3>
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#001435]/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-[#DDE3EA]">
+            <div className="p-5 border-b border-[#DDE3EA] flex justify-between items-center bg-[#F5F7FA]">
+              <h3 className="font-extrabold text-[#001435] text-sm">Create New Reward Coupon</h3>
               <button onClick={() => setIsModalOpen(false)}>
-                <X className="w-4 h-4 text-slate-400 hover:text-slate-700" />
+                <X className="w-4 h-4 text-[#536477] hover:text-[#001435]" />
               </button>
             </div>
 
@@ -280,48 +275,48 @@ export default function MerchantView({ currentUser }: MerchantViewProps) {
               )}
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Coupon Promo Code</label>
+                <label className="block font-bold text-[#001435] mb-1">Coupon Promo Code</label>
                 <input
                   type="text"
                   required
                   placeholder="E.g., SWIGGYPARTY25"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  className="w-full uppercase font-mono px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full uppercase font-mono px-3 py-2 border border-[#DDE3EA] rounded-xl focus:ring-2 focus:ring-[#0070E0] bg-[#F5F7FA]"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Display Title</label>
+                <label className="block font-bold text-[#001435] mb-1">Display Title</label>
                 <input
                   type="text"
                   required
                   placeholder="E.g., 25% OFF on Weekend Family Dining"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 border border-[#DDE3EA] rounded-xl focus:ring-2 focus:ring-[#0070E0] bg-[#F5F7FA]"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Description</label>
+                <label className="block font-bold text-[#001435] mb-1">Terms & Description</label>
                 <textarea
                   required
                   rows={2}
-                  placeholder="Terms and conditions..."
+                  placeholder="Offer details and conditions..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 border border-[#DDE3EA] rounded-xl focus:ring-2 focus:ring-[#0070E0] bg-[#F5F7FA]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Discount Type</label>
+                  <label className="block font-bold text-[#001435] mb-1">Discount Type</label>
                   <select
                     value={discountType}
                     onChange={(e: any) => setDiscountType(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                    className="w-full px-3 py-2 border border-[#DDE3EA] rounded-xl bg-[#F5F7FA]"
                   >
                     <option value="percentage">Percentage (%)</option>
                     <option value="fixed">Fixed (₹)</option>
@@ -329,39 +324,39 @@ export default function MerchantView({ currentUser }: MerchantViewProps) {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Discount Value</label>
+                  <label className="block font-bold text-[#001435] mb-1">Discount Value</label>
                   <input
                     type="number"
                     required
                     min={1}
                     value={discountValue}
                     onChange={(e) => setDiscountValue(parseFloat(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                    className="w-full px-3 py-2 border border-[#DDE3EA] rounded-xl bg-[#F5F7FA]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Min Order (₹)</label>
+                  <label className="block font-bold text-[#001435] mb-1">Min Order (₹)</label>
                   <input
                     type="number"
                     min={0}
                     value={minOrder}
                     onChange={(e) => setMinOrder(parseFloat(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                    className="w-full px-3 py-2 border border-[#DDE3EA] rounded-xl bg-[#F5F7FA]"
                   />
                 </div>
 
                 {discountType === "percentage" && (
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">Max Cap (₹)</label>
+                    <label className="block font-bold text-[#001435] mb-1">Max Cap (₹)</label>
                     <input
                       type="number"
                       min={10}
                       value={maxDiscount}
                       onChange={(e) => setMaxDiscount(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                      className="w-full px-3 py-2 border border-[#DDE3EA] rounded-xl bg-[#F5F7FA]"
                     />
                   </div>
                 )}
@@ -370,12 +365,12 @@ export default function MerchantView({ currentUser }: MerchantViewProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 rounded-xl transition text-xs shadow-md mt-2 flex items-center justify-center space-x-2"
+                className="w-full bg-[#0070E0] hover:bg-[#003087] text-white font-extrabold py-3 rounded-full transition text-xs shadow-xs mt-2 flex items-center justify-center space-x-2"
               >
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Publishing Coupon...</span>
+                    <span>Publishing Campaign...</span>
                   </>
                 ) : (
                   <span>Publish Offer to Marketplace</span>

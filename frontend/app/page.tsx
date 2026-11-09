@@ -105,7 +105,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F5F7FA] flex flex-col font-sans">
       {/* 1-Click Demo Persona Bar */}
       <DemoPersonaBar
         currentPersona={currentPersonaKey}
@@ -174,16 +174,17 @@ export default function Home() {
         onSelectCouponForCheckout={handleOpenCheckout}
       />
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-6 mt-12 text-center text-xs text-slate-500">
+      {/* Footer (PayPal Style) */}
+      <footer className="border-t border-[#DDE3EA] bg-white py-6 mt-12 text-center text-xs text-[#536477]">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="flex items-center space-x-2">
-            <span className="font-extrabold text-slate-900">PayPal SmartRewards AI</span>
+            <span className="font-extrabold text-[#003087]">PayPal</span>
+            <span className="font-bold text-[#0070E0]">SmartRewards AI</span>
             <span>•</span>
-            <span>PayPal AI Hackathon 2026</span>
+            <span className="text-[#536477]">PayPal AI Hackathon 2026</span>
           </div>
-          <p className="text-slate-400">
-            Official PayPal Orders v2 Sandbox Integration & Machine Learning Recommendation Platform
+          <p className="text-[#536477]">
+            Official PayPal Orders API v2 Sandbox Integration & Machine Learning Recommendation Platform
           </p>
         </div>
       </footer>

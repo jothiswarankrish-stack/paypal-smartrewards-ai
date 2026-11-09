@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useRef, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { ColDef, GridReadyEvent } from "ag-grid-community";
+import { ColDef } from "ag-grid-community";
 import { Download, Search } from "lucide-react";
 
 interface AGGridTableProps {
@@ -39,39 +39,39 @@ export default function AGGridTable({
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+    <div className="bg-white rounded-2xl border border-[#DDE3EA] shadow-xs overflow-hidden">
       {/* Table Header Bar */}
-      <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+      <div className="p-5 border-b border-[#DDE3EA] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F5F7FA]">
         <div>
-          <h3 className="font-extrabold text-slate-900 text-sm flex items-center space-x-2">
-            <span>{title}</span>
-            <span className="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-purple-200">
+          <div className="flex items-center space-x-2">
+            <h3 className="font-extrabold text-[#001435] text-base">{title}</h3>
+            <span className="bg-[#E5F2FC] text-[#003087] border border-[#BDE0FE] text-[10px] font-extrabold px-2 py-0.5 rounded-full">
               AG Grid Community
             </span>
-          </h3>
-          <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>
+          </div>
+          <p className="text-xs text-[#536477] mt-0.5">{subtitle}</p>
         </div>
 
         {/* Search & Export Controls */}
         <div className="flex items-center space-x-2">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-[#536477] absolute left-3 top-2.5" />
             <input
               type="text"
-              placeholder="Quick search..."
+              placeholder="Search in table..."
               value={quickFilterText}
               onChange={(e) => setQuickFilterText(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0079C1] w-40 sm:w-48"
+              className="pl-8 pr-3 py-1.5 text-xs bg-white border border-[#DDE3EA] rounded-full focus:outline-none focus:ring-2 focus:ring-[#0070E0] w-40 sm:w-48 text-[#001435]"
             />
           </div>
 
           <button
             onClick={onExportClick}
-            className="flex items-center space-x-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg transition shadow-2xs"
+            className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-white border border-[#DDE3EA] hover:bg-[#F0F7FD] text-[#003087] text-xs font-bold rounded-full transition shadow-2xs"
             title="Export Table as CSV"
           >
-            <Download className="w-3.5 h-3.5 text-slate-500" />
-            <span>CSV</span>
+            <Download className="w-3.5 h-3.5 text-[#0070E0]" />
+            <span>Export CSV</span>
           </button>
         </div>
       </div>
