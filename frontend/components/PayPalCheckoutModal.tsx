@@ -12,6 +12,9 @@ import {
   Lock,
   ArrowRight,
   Receipt,
+  Heart,
+  Globe2,
+  Sparkles,
 } from "lucide-react";
 
 interface PayPalCheckoutModalProps {
@@ -43,6 +46,9 @@ export default function PayPalCheckoutModal({
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [completedPayment, setCompletedPayment] = useState<PayPalCaptureResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Optional Giving Day & Rewards for Good Selection at Checkout
+  const [checkoutDonationAmount, setCheckoutDonationAmount] = useState<number>(0);
 
   useEffect(() => {
     if (coupon) {
@@ -232,6 +238,59 @@ export default function PayPalCheckoutModal({
                   <span className="text-2xl font-black text-[#003087] font-mono">
                     ₹{validationResult?.final_amount ? validationResult.final_amount.toFixed(2) : cartAmount.toFixed(2)}
                   </span>
+                </div>
+              </div>
+
+              {/* PayPal Global Giving Day Platform Fee Donation Notice */}
+              <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#001435] to-[#003087] text-white text-xs">
+                <div className="flex items-center space-x-2">
+                  <span className="bg-[#FFC439] text-[#001435] text-[9px] font-black px-2 py-0.5 rounded-full uppercase flex items-center gap-1">
+                    <Sparkles className="w-2.5 h-2.5" /> GIVING DAY ACTIVE
+                  </span>
+                  <span className="font-bold text-[11px] text-white">100% Platform Fee Dedicated to Charity</span>
+                </div>
+                <p className="text-[11px] text-blue-100 mt-1 leading-snug">
+                  PayPal is voluntarily contributing 100% of the platform transaction earnings from this payment to verified causes. <strong>Zero extra fee to you.</strong>
+                </p>
+              </div>
+
+              {/* Optional Rewards for Good Micro-Donation from Available Rewards */}
+              <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="font-extrabold text-[#001435] flex items-center gap-1.5">
+                    <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+                    <span>Voluntary Reward Contribution</span>
+                  </span>
+                  <span className="text-[10px] text-[#0070E0] font-bold bg-[#E5F2FC] px-2 py-0.5 rounded-full">
+                    Available Rewards: ₹500
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#536477] mt-1">
+                  Optional: donate a small portion of your shopping rewards to midday school meals:
+                </p>
+                <div className="flex items-center gap-1.5 mt-2">
+                  {[0, 10, 25, 50].map((amt) => {
+                    const isSelected = checkoutDonationAmount === amt;
+                    return (
+                      <button
+                        key={amt}
+                        type="button"
+                        onClick={() => setCheckoutDonationAmount(amt)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-[#0070E0] text-white border-[#0070E0] shadow-2xs"
+                            : "bg-white text-[#001435] border-[#DDE3EA] hover:bg-[#F5F7FA]"
+                        }`}
+                      >
+                        {amt === 0 ? "Skip" : `+₹${amt}`}
+                      </button>
+                    );
+                  })}
+                  {checkoutDonationAmount > 0 && (
+                    <span className="text-[11px] text-rose-600 font-bold ml-1">
+                      (Deducted from rewards, not card)
+                    </span>
+                  )}
                 </div>
               </div>
 

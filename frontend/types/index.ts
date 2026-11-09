@@ -172,3 +172,73 @@ export interface AgentChatResponse {
     currency: string;
   };
 }
+
+// --- Rewards for Good & Global Giving Day Types ---
+export interface DonationBeneficiary {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  impact_summary?: string;
+  logo_url?: string;
+  paypal_charity_id?: string;
+  hosted_button_id?: string;
+  total_received: number;
+  donor_count: number;
+  is_active: boolean;
+}
+
+export interface CustomerRewardBalance {
+  customer_id: string;
+  available_reward_points: number;
+  total_donated: number;
+  total_cash_redeemed: number;
+  currency: string;
+  last_updated: string;
+}
+
+export interface DonationReceipt {
+  success: boolean;
+  receipt_id: string;
+  customer_id: string;
+  beneficiary_id?: string;
+  beneficiary_name?: string;
+  donation_amount: number;
+  cash_redeemed: number;
+  remaining_balance: number;
+  currency: string;
+  source_type: string;
+  paypal_reference_id: string;
+  status: string;
+  timestamp: string;
+  message: string;
+}
+
+export interface SocialImpactBeneficiaryStat {
+  beneficiary_id: string;
+  name: string;
+  category: string;
+  total_received: number;
+  donor_count: number;
+  percentage_of_total: number;
+}
+
+export interface SocialImpactRecentDonation {
+  id: string;
+  customer_name: string;
+  beneficiary_name: string;
+  amount: number;
+  currency: string;
+  source_type: string;
+  paypal_reference_id: string;
+  timestamp: string;
+}
+
+export interface SocialImpactStats {
+  total_donated: number;
+  total_donors_count: number;
+  avg_donation_amount: number;
+  currency: string;
+  beneficiaries: SocialImpactBeneficiaryStat[];
+  recent_donations: SocialImpactRecentDonation[];
+}

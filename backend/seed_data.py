@@ -1,5 +1,6 @@
 import random
 from datetime import datetime, timedelta
+from sqlalchemy import text
 from database import SessionLocal, engine, Base
 import models
 
@@ -16,6 +17,8 @@ def seed_database():
 
         # If partial or empty, clean and re-seed
         print("Seeding PayPal SmartRewards AI database with 5 customer cohorts, 10 merchants, and 20+ coupons...")
+        db.query(models.RewardDonation).delete()
+        db.query(models.DonationBeneficiary).delete()
         db.query(models.CouponRedemption).delete()
         db.query(models.RecommendationEvent).delete()
         db.query(models.Recommendation).delete()
@@ -68,7 +71,10 @@ def seed_database():
                 persona_name="Food Delivery Enthusiast",
                 persona_description="Spends predominantly on Swiggy & Zomato (₹6,000/mo) with moderate taxi rides.",
                 monthly_budget=16000.0,
-                preferred_payment_method="paypal"
+                preferred_payment_method="paypal",
+                available_reward_points=500.0,
+                total_donated=50.0,
+                total_cash_redeemed=0.0
             ),
             models.CustomerProfile(
                 id="prof-cust-b-002",
@@ -76,7 +82,10 @@ def seed_database():
                 persona_name="Frequent Taxi Commuter",
                 persona_description="Daily cab & auto commuter (₹7,000/mo on Uber/Ola) across city hubs & airport trips.",
                 monthly_budget=18000.0,
-                preferred_payment_method="paypal"
+                preferred_payment_method="paypal",
+                available_reward_points=650.0,
+                total_donated=25.0,
+                total_cash_redeemed=0.0
             ),
             models.CustomerProfile(
                 id="prof-cust-c-003",
@@ -84,7 +93,10 @@ def seed_database():
                 persona_name="Online Shopping Enthusiast",
                 persona_description="Passionate e-commerce shopper spending ₹8,000/mo on Myntra, Ajio, and Amazon.",
                 monthly_budget=20000.0,
-                preferred_payment_method="paypal"
+                preferred_payment_method="paypal",
+                available_reward_points=800.0,
+                total_donated=100.0,
+                total_cash_redeemed=0.0
             ),
             models.CustomerProfile(
                 id="prof-cust-d-004",
@@ -92,7 +104,10 @@ def seed_database():
                 persona_name="Groceries & Quick Commerce Buyer",
                 persona_description="Family pantry manager spending ₹6,500/mo on Blinkit, Zepto, and organic markets.",
                 monthly_budget=15000.0,
-                preferred_payment_method="paypal"
+                preferred_payment_method="paypal",
+                available_reward_points=400.0,
+                total_donated=0.0,
+                total_cash_redeemed=0.0
             ),
             models.CustomerProfile(
                 id="prof-cust-e-005",
@@ -100,7 +115,10 @@ def seed_database():
                 persona_name="Travel & Entertainment Seeker",
                 persona_description="Active weekend traveler spending ₹7,500/mo on MakeMyTrip, flights & BookMyShow.",
                 monthly_budget=25000.0,
-                preferred_payment_method="paypal"
+                preferred_payment_method="paypal",
+                available_reward_points=900.0,
+                total_donated=50.0,
+                total_cash_redeemed=0.0
             ),
         ]
         db.add_all(profiles)
@@ -229,7 +247,94 @@ def seed_database():
         db.add_all(savings_records)
         db.commit()
 
-        print(f"Database successfully populated with {len(tx_batch)} transactions across 5 cohorts, 10 merchants, and {len(coupons)} coupons!")
+        # 7. Beneficiaries for Rewards for Good
+        beneficiaries = [
+            models.DonationBeneficiary(
+                id="beneficiary-akshaya-patra-01",
+                name="Akshaya Patra Foundation — Midday Meals",
+                category="children",
+                description="World's largest NGO-run school meal program fighting classroom hunger and boosting school attendance across underprivileged communities.",
+                impact_summary="₹25 provides 1 wholesome, nutritious midday meal for a child in school.",
+                logo_url="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=200&auto=format&fit=crop&q=60",
+                paypal_charity_id="PP-CHARITY-IN-AKSHAYA-01",
+                hosted_button_id="PP-DONATE-AKSHAYA-SANDBOX",
+                total_received=12550.0,
+                donor_count=246,
+                is_active=True
+            ),
+            models.DonationBeneficiary(
+                id="beneficiary-shelter-hope-02",
+                name="Shelter & Hope Relief — Homeless Support",
+                category="homeless",
+                description="Emergency night shelters, nutritious dinners, hygiene kits, and winter blankets for homeless individuals and vulnerable families.",
+                impact_summary="₹50 provides a warm winter blanket and emergency sanitary kit for a homeless family.",
+                logo_url="https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=200&auto=format&fit=crop&q=60",
+                paypal_charity_id="PP-CHARITY-IN-SHELTER-02",
+                hosted_button_id="PP-DONATE-SHELTER-SANDBOX",
+                total_received=8775.0,
+                donor_count=161,
+                is_active=True
+            ),
+            models.DonationBeneficiary(
+                id="beneficiary-unicef-edu-03",
+                name="UNICEF Underprivileged Child Education Initiative",
+                category="education",
+                description="Equipping rural government schools with digital learning tablets, STEM learning kits, and school supplies for first-generation learners.",
+                impact_summary="₹100 funds a STEM learning kit and textbook set for a term.",
+                logo_url="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=200&auto=format&fit=crop&q=60",
+                paypal_charity_id="PP-CHARITY-UNICEF-EDU-03",
+                hosted_button_id="PP-DONATE-UNICEF-SANDBOX",
+                total_received=15500.0,
+                donor_count=311,
+                is_active=True
+            ),
+        ]
+        db.add_all(beneficiaries)
+        db.commit()
+
+        # 8. Sample Historical Seed Donations
+        sample_donations = [
+            models.RewardDonation(
+                id="don-seed-001",
+                customer_id="user-cust-a-001",
+                beneficiary_id="beneficiary-akshaya-patra-01",
+                amount=50.0,
+                currency="INR",
+                source_type="reward_balance",
+                customer_consent=True,
+                paypal_reference_id="PPRFG-TX-2026-001-A",
+                status="COMPLETED",
+                created_at=datetime.utcnow() - timedelta(days=5)
+            ),
+            models.RewardDonation(
+                id="don-seed-002",
+                customer_id="user-cust-b-002",
+                beneficiary_id="beneficiary-shelter-hope-02",
+                amount=25.0,
+                currency="INR",
+                source_type="cash_conversion",
+                customer_consent=True,
+                paypal_reference_id="PPRFG-TX-2026-002-B",
+                status="COMPLETED",
+                created_at=datetime.utcnow() - timedelta(days=3)
+            ),
+            models.RewardDonation(
+                id="don-seed-003",
+                customer_id="user-cust-c-003",
+                beneficiary_id="beneficiary-unicef-edu-03",
+                amount=100.0,
+                currency="INR",
+                source_type="coupon_checkout",
+                customer_consent=True,
+                paypal_reference_id="PPRFG-TX-2026-003-C",
+                status="COMPLETED",
+                created_at=datetime.utcnow() - timedelta(days=1)
+            ),
+        ]
+        db.add_all(sample_donations)
+        db.commit()
+
+        print(f"Database successfully populated with {len(tx_batch)} transactions across 5 cohorts, 10 merchants, {len(coupons)} coupons, and 3 social impact beneficiaries!")
 
     except Exception as e:
         db.rollback()
@@ -238,5 +343,138 @@ def seed_database():
     finally:
         db.close()
 
+def ensure_beneficiaries():
+    """Ensure beneficiaries table exists and is populated even if database was previously seeded."""
+    # Ensure columns exist via SQLite alter table
+    with engine.connect() as conn:
+        for col, col_type, default_val in [
+            ("available_reward_points", "FLOAT", "500.0"),
+            ("total_donated", "FLOAT", "0.0"),
+            ("total_cash_redeemed", "FLOAT", "0.0"),
+        ]:
+            try:
+                conn.execute(text(f"ALTER TABLE customer_profiles ADD COLUMN {col} {col_type} DEFAULT {default_val}"))
+                conn.commit()
+            except Exception:
+                pass
+
+    Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+    try:
+        count = db.query(models.DonationBeneficiary).count()
+        if count == 0:
+            print("Seeding missing DonationBeneficiary records...")
+            beneficiaries = [
+                models.DonationBeneficiary(
+                    id="beneficiary-akshaya-patra-01",
+                    name="Akshaya Patra Foundation — Midday Meals",
+                    category="children",
+                    description="World's largest NGO-run school meal program fighting classroom hunger and boosting school attendance across underprivileged communities.",
+                    impact_summary="₹25 provides 1 wholesome, nutritious midday meal for a child in school.",
+                    logo_url="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=200&auto=format&fit=crop&q=60",
+                    paypal_charity_id="PP-CHARITY-IN-AKSHAYA-01",
+                    hosted_button_id="PP-DONATE-AKSHAYA-SANDBOX",
+                    total_received=12550.0,
+                    donor_count=246,
+                    is_active=True
+                ),
+                models.DonationBeneficiary(
+                    id="beneficiary-shelter-hope-02",
+                    name="Shelter & Hope Relief — Homeless Support",
+                    category="homeless",
+                    description="Emergency night shelters, nutritious dinners, hygiene kits, and winter blankets for homeless individuals and vulnerable families.",
+                    impact_summary="₹50 provides a warm winter blanket and emergency sanitary kit for a homeless family.",
+                    logo_url="https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=200&auto=format&fit=crop&q=60",
+                    paypal_charity_id="PP-CHARITY-IN-SHELTER-02",
+                    hosted_button_id="PP-DONATE-SHELTER-SANDBOX",
+                    total_received=8775.0,
+                    donor_count=161,
+                    is_active=True
+                ),
+                models.DonationBeneficiary(
+                    id="beneficiary-unicef-edu-03",
+                    name="UNICEF Underprivileged Child Education Initiative",
+                    category="education",
+                    description="Equipping rural government schools with digital learning tablets, STEM learning kits, and school supplies for first-generation learners.",
+                    impact_summary="₹100 funds a STEM learning kit and textbook set for a term.",
+                    logo_url="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=200&auto=format&fit=crop&q=60",
+                    paypal_charity_id="PP-CHARITY-UNICEF-EDU-03",
+                    hosted_button_id="PP-DONATE-UNICEF-SANDBOX",
+                    total_received=15500.0,
+                    donor_count=311,
+                    is_active=True
+                ),
+            ]
+            db.add_all(beneficiaries)
+            db.commit()
+
+            # Also ensure customer profiles have points
+            default_points = {
+                "user-cust-a-001": (500.0, 50.0),
+                "user-cust-b-002": (650.0, 25.0),
+                "user-cust-c-003": (800.0, 100.0),
+                "user-cust-d-004": (400.0, 0.0),
+                "user-cust-e-005": (900.0, 50.0),
+            }
+            for user_id, (points, donated) in default_points.items():
+                p = db.query(models.CustomerProfile).filter_by(user_id=user_id).first()
+                if p:
+                    if not p.available_reward_points:
+                        p.available_reward_points = points
+                    if not p.total_donated:
+                        p.total_donated = donated
+            db.commit()
+
+            # Add sample seed donations if none exist
+            if db.query(models.RewardDonation).count() == 0:
+                sample_donations = [
+                    models.RewardDonation(
+                        id="don-seed-001",
+                        customer_id="user-cust-a-001",
+                        beneficiary_id="beneficiary-akshaya-patra-01",
+                        amount=50.0,
+                        currency="INR",
+                        source_type="reward_balance",
+                        customer_consent=True,
+                        paypal_reference_id="PPRFG-TX-2026-001-A",
+                        status="COMPLETED",
+                        created_at=datetime.utcnow() - timedelta(days=5)
+                    ),
+                    models.RewardDonation(
+                        id="don-seed-002",
+                        customer_id="user-cust-b-002",
+                        beneficiary_id="beneficiary-shelter-hope-02",
+                        amount=25.0,
+                        currency="INR",
+                        source_type="cash_conversion",
+                        customer_consent=True,
+                        paypal_reference_id="PPRFG-TX-2026-002-B",
+                        status="COMPLETED",
+                        created_at=datetime.utcnow() - timedelta(days=3)
+                    ),
+                    models.RewardDonation(
+                        id="don-seed-003",
+                        customer_id="user-cust-c-003",
+                        beneficiary_id="beneficiary-unicef-edu-03",
+                        amount=100.0,
+                        currency="INR",
+                        source_type="coupon_checkout",
+                        customer_consent=True,
+                        paypal_reference_id="PPRFG-TX-2026-003-C",
+                        status="COMPLETED",
+                        created_at=datetime.utcnow() - timedelta(days=1)
+                    ),
+                ]
+                db.add_all(sample_donations)
+                db.commit()
+            print("Beneficiaries and sample donations seeded successfully.")
+    except Exception as e:
+        db.rollback()
+        print(f"Error ensuring beneficiaries: {e}")
+    finally:
+        db.close()
+
 if __name__ == "__main__":
     seed_database()
+    ensure_beneficiaries()
+

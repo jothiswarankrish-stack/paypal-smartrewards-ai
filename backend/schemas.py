@@ -223,3 +223,89 @@ class AgentChatResponse(BaseModel):
     suggested_deals: List[DealProposal] = []
     action_type: Optional[str] = None  # "OFFER_RECOMMENDATION", "CHECKOUT_PROMPT", "INFO"
     order_intent: Optional[Dict[str, Any]] = None
+
+
+# --- Rewards for Good Schemas ---
+class DonationBeneficiaryResponse(BaseModel):
+    id: str
+    name: str
+    category: str
+    description: str
+    impact_summary: Optional[str] = None
+    logo_url: Optional[str] = None
+    paypal_charity_id: Optional[str] = None
+    hosted_button_id: Optional[str] = None
+    total_received: float = 0.0
+    donor_count: int = 0
+    is_active: bool = True
+
+    class Config:
+        from_attributes = True
+
+class CustomerRewardBalanceResponse(BaseModel):
+    customer_id: str
+    available_reward_points: float
+    total_donated: float
+    total_cash_redeemed: float
+    currency: str = "INR"
+    last_updated: datetime
+
+class DonationContributeRequest(BaseModel):
+    customer_id: str
+    beneficiary_id: str
+    amount: float = Field(..., gt=0, description="Voluntary donation amount must be positive")
+    currency: str = "INR"
+    customer_consent: bool = Field(..., description="Customer must explicitly consent")
+    source_type: str = "reward_balance"
+    idempotency_key: Optional[str] = None
+
+class CashConversionRequest(BaseModel):
+    customer_id: str
+    amount_to_redeem: float = Field(..., gt=0, description="Amount of rewards to convert into cash")
+    donation_amount: float = Field(default=0.0, ge=0, description="Optional voluntary donation amount")
+    beneficiary_id: Optional[str] = None
+    customer_consent: bool = False
+    currency: str = "INR"
+
+class DonationReceiptResponse(BaseModel):
+    success: bool
+    receipt_id: str
+    customer_id: str
+    beneficiary_id: Optional[str] = None
+    beneficiary_name: Optional[str] = None
+    donation_amount: float = 0.0
+    cash_redeemed: float = 0.0
+    remaining_balance: float
+    currency: str = "INR"
+    source_type: str
+    paypal_reference_id: str
+    status: str
+    timestamp: datetime
+    message: str
+
+class SocialImpactBeneficiaryStat(BaseModel):
+    beneficiary_id: str
+    name: str
+    category: str
+    total_received: float
+    donor_count: int
+    percentage_of_total: float
+
+class SocialImpactRecentDonation(BaseModel):
+    id: str
+    customer_name: str
+    beneficiary_name: str
+    amount: float
+    currency: str
+    source_type: str
+    paypal_reference_id: str
+    timestamp: datetime
+
+class SocialImpactStatsResponse(BaseModel):
+    total_donated: float
+    total_donors_count: int
+    avg_donation_amount: float
+    currency: str = "INR"
+    beneficiaries: List[SocialImpactBeneficiaryStat]
+    recent_donations: List[SocialImpactRecentDonation]
+

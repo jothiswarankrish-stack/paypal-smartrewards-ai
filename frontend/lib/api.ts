@@ -10,6 +10,10 @@ import {
   CohortItem,
   AgentChatResponse,
   Transaction,
+  DonationBeneficiary,
+  CustomerRewardBalance,
+  DonationReceipt,
+  SocialImpactStats,
 } from "../types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -202,3 +206,63 @@ export async function sendAgentMessage(message: string, customerId?: string): Pr
   if (!res.ok) throw new Error("Agentic commerce copilot error");
   return res.json();
 }
+
+// --- Rewards for Good & Global Giving Day APIs ---
+export async function getDonationBeneficiaries(): Promise<DonationBeneficiary[]> {
+  const res = await fetch(`${API_BASE}/api/donations/beneficiaries`);
+  if (!res.ok) throw new Error("Failed to load donation beneficiaries");
+  return res.json();
+}
+
+export async function getCustomerRewardBalance(customerId: string): Promise<CustomerRewardBalance> {
+  const res = await fetch(`${API_BASE}/api/donations/customer-balance/${customerId}`);
+  if (!res.ok) throw new Error("Failed to load customer reward balance");
+  return res.json();
+}
+
+export async function contributeDonation(payload: {
+  customer_id: string;
+  beneficiary_id: string;
+  amount: number;
+  currency?: string;
+  customer_consent: boolean;
+  source_type?: string;
+}): Promise<DonationReceipt> {
+  const res = await fetch(`${API_BASE}/api/donations/contribute`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || "Donation failed");
+  }
+  return res.json();
+}
+
+export async function convertRewardsToCash(payload: {
+  customer_id: string;
+  amount_to_redeem: number;
+  donation_amount?: number;
+  beneficiary_id?: string;
+  customer_consent?: boolean;
+  currency?: string;
+}): Promise<DonationReceipt> {
+  const res = await fetch(`${API_BASE}/api/donations/convert-cash`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || "Cash conversion failed");
+  }
+  return res.json();
+}
+
+export async function getSocialImpactStats(): Promise<SocialImpactStats> {
+  const res = await fetch(`${API_BASE}/api/donations/analytics`);
+  if (!res.ok) throw new Error("Failed to load social impact statistics");
+  return res.json();
+}
+

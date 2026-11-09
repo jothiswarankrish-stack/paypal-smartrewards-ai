@@ -11,6 +11,9 @@ import MerchantView from "../components/MerchantView";
 import AdminView from "../components/AdminView";
 import PayPalCheckoutModal from "../components/PayPalCheckoutModal";
 import AgenticCommerceDrawer from "../components/AgenticCommerceDrawer";
+import GlobalGivingDayBanner from "../components/GlobalGivingDayBanner";
+import GlobalGivingDayModal from "../components/GlobalGivingDayModal";
+import SocialImpactView from "../components/SocialImpactView";
 
 import {
   demoLogin,
@@ -34,6 +37,7 @@ export default function Home() {
   const [selectedCouponForCheckout, setSelectedCouponForCheckout] = useState<Coupon | null>(null);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState<boolean>(false);
   const [isAgentDrawerOpen, setIsAgentDrawerOpen] = useState<boolean>(false);
+  const [isGivingDayModalOpen, setIsGivingDayModalOpen] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -106,6 +110,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#F5F7FA] flex flex-col font-sans">
+      {/* Global Giving Day Announcement Top Bar */}
+      <GlobalGivingDayBanner
+        onOpenGivingDayModal={() => setIsGivingDayModalOpen(true)}
+        onNavigateToGivingTab={() => setActiveTab("giving_day")}
+      />
+
       {/* 1-Click Demo Persona Bar */}
       <DemoPersonaBar
         currentPersona={currentPersonaKey}
@@ -131,6 +141,7 @@ export default function Home() {
             recommendations={recommendations}
             onSelectCouponForCheckout={handleOpenCheckout}
             onExploreMoreRecommendations={() => setActiveTab("recommendations")}
+            onNavigateToGivingTab={() => setActiveTab("giving_day")}
           />
         )}
 
@@ -150,12 +161,26 @@ export default function Home() {
           />
         )}
 
+        {activeTab === "giving_day" && (
+          <SocialImpactView
+            currentUser={currentUser}
+            onOpenGivingDayModal={() => setIsGivingDayModalOpen(true)}
+          />
+        )}
+
         {activeTab === "analytics" && <AnalyticsView />}
 
         {activeTab === "merchant" && <MerchantView currentUser={currentUser} />}
 
         {activeTab === "admin" && <AdminView />}
       </main>
+
+      {/* PayPal Global Giving Day Explainer & Cause Voting Modal */}
+      <GlobalGivingDayModal
+        isOpen={isGivingDayModalOpen}
+        onClose={() => setIsGivingDayModalOpen(false)}
+        onGoToRewardsForGood={() => setActiveTab("giving_day")}
+      />
 
       {/* PayPal Sandbox Checkout Modal */}
       <PayPalCheckoutModal

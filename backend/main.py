@@ -2,9 +2,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from seed_data import seed_database
+from seed_data import seed_database, ensure_beneficiaries
 from routers import (
-    auth, customer, recommendations, coupons, paypal, merchant, admin, analytics, agent
+    auth, customer, recommendations, coupons, paypal, merchant, admin, analytics, agent, donations
 )
 
 @asynccontextmanager
@@ -13,6 +13,7 @@ async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     try:
         seed_database()
+        ensure_beneficiaries()
     except Exception as e:
         print(f"Startup seed notice: {e}")
     yield
@@ -43,6 +44,7 @@ app.include_router(merchant.router)
 app.include_router(admin.router)
 app.include_router(analytics.router)
 app.include_router(agent.router)
+app.include_router(donations.router)
 
 @app.get("/")
 def health_check():

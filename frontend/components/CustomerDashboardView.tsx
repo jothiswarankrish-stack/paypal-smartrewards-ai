@@ -17,6 +17,8 @@ import {
   ArrowRight,
   ShieldCheck,
   TrendingUp,
+  Heart,
+  Gift,
 } from "lucide-react";
 
 interface CustomerDashboardViewProps {
@@ -24,6 +26,7 @@ interface CustomerDashboardViewProps {
   recommendations: RecommendationResponse | null;
   onSelectCouponForCheckout: (coupon: Coupon) => void;
   onExploreMoreRecommendations: () => void;
+  onNavigateToGivingTab?: () => void;
 }
 
 const CATEGORY_ICONS: { [key: string]: any } = {
@@ -40,6 +43,7 @@ export default function CustomerDashboardView({
   recommendations,
   onSelectCouponForCheckout,
   onExploreMoreRecommendations,
+  onNavigateToGivingTab,
 }: CustomerDashboardViewProps) {
   if (!insights) {
     return (
@@ -141,6 +145,36 @@ export default function CustomerDashboardView({
           </p>
           <span className="text-[11px] text-[#00875A] font-bold">Instant Sandbox discount eligible</span>
         </div>
+      </div>
+
+      {/* Rewards for Good & Available Balance Spotlight */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-[#FFF5F5] via-[#FFF8F6] to-[#FFFFFF] border border-[#FECDD3] shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex items-center space-x-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <Heart className="w-6 h-6 fill-white" />
+          </div>
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="bg-rose-100 text-rose-700 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                PayPal Rewards for Good
+              </span>
+              <span className="text-xs font-bold text-[#001435]">Available Reward Balance: ₹500.00</span>
+            </div>
+            <p className="text-xs text-[#536477] mt-1 leading-relaxed">
+              Convert your rewards into instant PayPal cash or voluntarily contribute a portion to feed school children or shelter homeless families.
+            </p>
+          </div>
+        </div>
+
+        {onNavigateToGivingTab && (
+          <button
+            onClick={onNavigateToGivingTab}
+            className="shrink-0 flex items-center space-x-2 px-5 py-2.5 rounded-full text-xs font-black bg-[#003087] hover:bg-[#002266] text-white shadow-xs cursor-pointer transition-all"
+          >
+            <span>Convert / Donate Rewards</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
 
       {/* Top AI Match Spotlight Banner */}

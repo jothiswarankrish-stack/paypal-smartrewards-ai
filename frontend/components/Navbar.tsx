@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sparkles, Bot, Shield, Store, LayoutDashboard, Ticket, BarChart3 } from "lucide-react";
+import { Sparkles, Bot, Shield, Store, LayoutDashboard, Ticket, BarChart3, Heart } from "lucide-react";
 import { User } from "../types";
 
 interface NavbarProps {
@@ -22,6 +22,7 @@ export default function Navbar({
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "recommendations", label: "AI Rewards", icon: Sparkles, badge: "Personalized" },
     { id: "marketplace", label: "Coupons", icon: Ticket },
+    { id: "giving_day", label: "Rewards for Good", icon: Heart, badge: "Giving Day" },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "merchant", label: "Merchant Portal", icon: Store },
     { id: "admin", label: "Admin Operations", icon: Shield },

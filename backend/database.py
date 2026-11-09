@@ -3,7 +3,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from config import settings
 
-database_url = settings.DATABASE_URL or "sqlite:///./smartrewards.db"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+default_sqlite_path = os.path.join(BASE_DIR, "smartrewards.db").replace("\\", "/")
+database_url = settings.DATABASE_URL or f"sqlite:///{default_sqlite_path}"
 
 # Handle PostgreSQL prefix if postgres:// is used instead of postgresql://
 if database_url.startswith("postgres://"):
