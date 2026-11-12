@@ -8,6 +8,11 @@
 :root {
   --foreground-rgb: 0, 20, 53;
   --background-rgb: 245, 247, 250;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -15,6 +20,33 @@ body {
   background-color: #F5F7FA;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   letter-spacing: -0.01em;
+  overscroll-behavior-y: none;
+}
+
+/* Mobile App Container Shell */
+.app-shell {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  position: relative;
+  background: #F5F7FA;
+  box-shadow: 0 0 60px rgba(0, 48, 135, 0.08);
+}
+
+@media (min-width: 480px) {
+  body {
+    background: #E8ECF0;
+  }
+  .app-shell {
+    border-left: 1px solid #DDE3EA;
+    border-right: 1px solid #DDE3EA;
+  }
+}
+
+/* Main content area with safe padding for bottom nav */
+.app-content {
+  padding-bottom: calc(72px + var(--safe-bottom));
+  min-height: 100dvh;
 }
 
 /* PayPal Branded AG Grid Theme */
@@ -28,8 +60,8 @@ body {
   --ag-border-color: #DDE3EA;
   --ag-font-family: inherit;
   --ag-font-size: 13px;
-  --ag-cell-horizontal-padding: 16px;
-  border-radius: 12px;
+  --ag-cell-horizontal-padding: 12px;
+  border-radius: 16px;
   overflow: hidden;
   border: 1px solid #DDE3EA;
 }
@@ -42,18 +74,43 @@ body {
   color: #536477;
 }
 
+/* Smooth page transitions */
+.view-enter {
+  animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Subtle scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #F5F7FA;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
+}
+
+/* Hide scrollbar on horizontal scroll strips */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

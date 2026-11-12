@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { Utensils, Car, ShoppingBag, Apple, Plane, Store, ShieldAlert, Sparkles, UserCheck } from "lucide-react";
-
+import { Utensils, Car, ShoppingBag, Apple, Plane, Store, ShieldAlert, Sparkles, ChevronRight } from "lucide-react";
 import { User } from "../types";
 
 interface DemoPersonaBarProps {
@@ -15,98 +14,145 @@ interface DemoPersonaBarProps {
 export default function DemoPersonaBar({
   currentPersona,
   onSelectPersona,
+  currentUser,
   isLoading,
 }: DemoPersonaBarProps) {
   const personas = [
     {
       key: "customer_a",
+      name: "Ananya S.",
       label: "Customer A",
-      sub: "Foodie • ₹6k Swiggy",
+      category: "Food Delivery",
+      highlight: "₹6,000 / mo Swiggy",
+      topMerchant: "Swiggy Gourmet",
       icon: Utensils,
-      color: "text-orange-600",
+      color: "bg-orange-500",
+      accent: "text-orange-600",
     },
     {
       key: "customer_b",
+      name: "Rohan V.",
       label: "Customer B",
-      sub: "Commuter • ₹7k Uber",
+      category: "Taxi & Commute",
+      highlight: "₹7,000 / mo Uber",
+      topMerchant: "Uber Premier",
       icon: Car,
-      color: "text-[#0070E0]",
+      color: "bg-[#0070E0]",
+      accent: "text-[#0070E0]",
     },
     {
       key: "customer_c",
+      name: "Priya N.",
       label: "Customer C",
-      sub: "Shopper • ₹8k Myntra",
+      category: "Fashion & Shop",
+      highlight: "₹8,000 / mo Myntra",
+      topMerchant: "Myntra Clearance",
       icon: ShoppingBag,
-      color: "text-purple-600",
+      color: "bg-purple-600",
+      accent: "text-purple-600",
     },
     {
       key: "customer_d",
+      name: "Rajesh K.",
       label: "Customer D",
-      sub: "Pantry • ₹6.5k Blinkit",
+      category: "Daily Grocery",
+      highlight: "₹6,500 / mo Blinkit",
+      topMerchant: "Blinkit SuperSaver",
       icon: Apple,
-      color: "text-[#00875A]",
+      color: "bg-[#00875A]",
+      accent: "text-[#00875A]",
     },
     {
       key: "customer_e",
+      name: "Sneha P.",
       label: "Customer E",
-      sub: "Travel • ₹7.5k MMT",
+      category: "Travel & Hotels",
+      highlight: "₹7,500 / mo MMT",
+      topMerchant: "MakeMyTrip Flights",
       icon: Plane,
-      color: "text-teal-600",
+      color: "bg-teal-600",
+      accent: "text-teal-600",
     },
     {
       key: "merchant",
-      label: "Merchant",
-      sub: "FreshBite Partner",
+      name: "Merchant Portal",
+      label: "Partner",
+      category: "Swiggy Business",
+      highlight: "Campaign Manager",
+      topMerchant: "Partner Hub",
       icon: Store,
-      color: "text-[#003087]",
+      color: "bg-[#003087]",
+      accent: "text-[#003087]",
     },
     {
       key: "admin",
-      label: "Admin",
-      sub: "Ops & Audit",
+      name: "Admin Audit",
+      label: "Operations",
+      category: "Telemetry & Logs",
+      highlight: "Reset & Telemetry",
+      topMerchant: "Ops Ledger",
       icon: ShieldAlert,
-      color: "text-slate-700",
+      color: "bg-slate-700",
+      accent: "text-slate-700",
     },
   ];
 
-  return (
-    <div className="bg-[#FFFFFF] border-b border-[#DDE3EA] px-4 py-2.5 shadow-2xs">
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-2.5">
-        <div className="flex items-center space-x-2 shrink-0">
-          <div className="flex items-center space-x-1.5 bg-[#F0F7FD] text-[#003087] border border-[#BDE0FE] px-2.5 py-1 rounded-full text-[11px] font-bold">
-            <UserCheck className="w-3.5 h-3.5 text-[#0070E0]" />
-            <span>Demonstration Persona Switcher:</span>
-          </div>
-          <span className="text-[11px] text-[#536477] hidden xl:inline">
-            Each profile has 30 days of distinct synthetic transactions & AI recommendations
-          </span>
-        </div>
+  const activePersonaObj = personas.find((p) => p.key === currentPersona) || personas[0];
+  const ActiveIcon = activePersonaObj.icon;
 
-        {/* Persona Switcher Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5">
+  return (
+    <div className="bg-white border-b border-[#E5E9EE]">
+      {/* 1. Horizontal Demo User Pills */}
+      <div className="px-3 pt-2.5 pb-2">
+        <div className="flex items-center space-x-1.5 overflow-x-auto hide-scrollbar py-0.5">
+          <span className="text-[10px] font-black text-[#8B95A5] uppercase tracking-wider whitespace-nowrap pr-1 flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-[#0070E0]" />
+            <span>Profile:</span>
+          </span>
           {personas.map((p) => {
-            const Icon = p.icon;
             const isSelected = currentPersona === p.key;
+            const Icon = p.icon;
             return (
               <button
                 key={p.key}
                 onClick={() => onSelectPersona(p.key)}
                 disabled={isLoading}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
                   isSelected
-                    ? "bg-[#003087] text-white shadow-xs ring-2 ring-[#0070E0]/30"
-                    : "bg-[#F5F7FA] text-[#001435] hover:bg-[#EBF3FB] border border-[#DDE3EA]"
+                    ? "bg-[#003087] text-white shadow-xs ring-2 ring-[#0070E0]/30 scale-102"
+                    : "bg-[#F5F7FA] text-[#001435] hover:bg-[#EBF3FB] border border-[#E5E9EE]"
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isSelected ? "text-white" : p.color}`} />
-                <span>{p.label}</span>
-                <span className={`text-[10px] hidden sm:inline font-normal ${isSelected ? "text-blue-100" : "text-[#536477]"}`}>
-                  ({p.sub})
-                </span>
+                <div
+                  className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold ${
+                    isSelected ? "bg-white text-[#003087]" : `${p.color} text-white`
+                  }`}
+                >
+                  <Icon className="w-2.5 h-2.5" />
+                </div>
+                <span className="text-[11px] font-extrabold">{p.name}</span>
               </button>
             );
           })}
         </div>
+      </div>
+
+      {/* 2. Self-Explanatory Profile Context Strip */}
+      <div className="px-3 py-1.5 bg-[#F0F7FD] border-t border-[#E1EAF4] flex items-center justify-between text-[11px]">
+        <div className="flex items-center space-x-2 truncate">
+          <span className="font-extrabold text-[#003087] flex items-center gap-1 shrink-0">
+            <ActiveIcon className="w-3 h-3 text-[#0070E0]" />
+            <span>{activePersonaObj.category}</span>
+          </span>
+          <span className="text-[#8B95A5]">•</span>
+          <span className="text-[#536477] font-semibold truncate">
+            {activePersonaObj.highlight}
+          </span>
+        </div>
+
+        <span className="text-[10px] font-black text-[#0070E0] bg-white px-2 py-0.5 rounded-full border border-[#D5E6F5] shrink-0 ml-1">
+          AI Target: {activePersonaObj.topMerchant}
+        </span>
       </div>
     </div>
   );

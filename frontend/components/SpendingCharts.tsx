@@ -6,12 +6,7 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
   Tooltip,
-  Legend,
 } from "recharts";
 import { SpendingCategoryBreakdown } from "../types";
 
@@ -20,18 +15,18 @@ interface SpendingChartsProps {
 }
 
 const CATEGORY_COLORS: { [key: string]: string } = {
-  food: "#f97316", // Orange
-  taxi: "#2563eb", // Blue
-  shopping: "#9333ea", // Purple
-  groceries: "#16a34a", // Green
-  entertainment: "#e11d48", // Rose
-  travel: "#0d9488", // Teal
+  food: "#f97316",
+  taxi: "#0070E0",
+  shopping: "#9333ea",
+  groceries: "#16a34a",
+  entertainment: "#e11d48",
+  travel: "#0d9488",
 };
 
 export default function SpendingCharts({ categoryBreakdown }: SpendingChartsProps) {
   if (!categoryBreakdown || categoryBreakdown.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-slate-400 text-xs">
+      <div className="h-40 flex items-center justify-center text-slate-400 text-xs">
         No transaction records available.
       </div>
     );
@@ -44,67 +39,64 @@ export default function SpendingCharts({ categoryBreakdown }: SpendingChartsProp
     color: CATEGORY_COLORS[item.category.toLowerCase()] || "#64748b",
   }));
 
-  const barData = categoryBreakdown.map((item) => ({
-    category: item.category.charAt(0).toUpperCase() + item.category.slice(1),
-    amount: item.total_amount,
-    transactions: item.transaction_count,
-  }));
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Category Spend Distribution (Donut Chart) */}
-      <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
-        <div className="mb-4">
-          <h4 className="text-sm font-extrabold text-slate-900">Category Spending Distribution</h4>
-          <p className="text-xs text-slate-500">30-day percentage share of total expenditure</p>
-        </div>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                innerRadius={55}
-                outerRadius={85}
-                paddingAngle={3}
-                dataKey="value"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(val: any) => [`₹${Number(val || 0).toLocaleString()}`, "Spend"]}
-                contentStyle={{ borderRadius: "8px", fontSize: "12px" }}
-              />
-              <Legend
-                formatter={(val) => <span className="text-xs text-slate-700 font-medium">{val}</span>}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+    <div className="space-y-3">
+      {/* Donut Chart (Compact Mobile Sized) */}
+      <div className="h-44 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="50%"
+              innerRadius={48}
+              outerRadius={68}
+              paddingAngle={4}
+              dataKey="value"
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(val: any) => [`₹${Number(val || 0).toLocaleString()}`, "Spend"]}
+              contentStyle={{
+                borderRadius: "12px",
+                fontSize: "11px",
+                border: "1px solid #E5E9EE",
+                padding: "6px 10px",
+              }}
+            />
+          </PieChart>
+        </ResponsiveContainer>
       </div>
 
-      {/* Category Spending vs Order Counts (Bar Chart) */}
-      <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
-        <div className="mb-4">
-          <h4 className="text-sm font-extrabold text-slate-900">Total Spent by Category (INR)</h4>
-          <p className="text-xs text-slate-500">Direct inputs fueling the AI recommendation scoring</p>
-        </div>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={barData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <XAxis dataKey="category" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `₹${v}`} />
-              <Tooltip
-                formatter={(val: any) => [`₹${Number(val || 0).toLocaleString()}`, "Amount"]}
-                contentStyle={{ borderRadius: "8px", fontSize: "12px" }}
-              />
-              <Bar dataKey="amount" fill="#0079C1" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Horizontal Progress Bars Breakdown */}
+      <div className="space-y-2 pt-1">
+        {categoryBreakdown.slice(0, 4).map((item) => {
+          const color = CATEGORY_COLORS[item.category.toLowerCase()] || "#0070E0";
+          return (
+            <div key={item.category} className="text-xs">
+              <div className="flex justify-between items-center mb-1 text-[11px]">
+                <span className="font-bold text-[#001435] capitalize">
+                  {item.category}
+                </span>
+                <span className="text-[#536477] font-semibold">
+                  ₹{item.total_amount.toLocaleString()} ({item.percentage}%)
+                </span>
+              </div>
+              <div className="w-full bg-[#F0F2F5] h-1.5 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.min(100, Math.max(8, item.percentage))}%`,
+                    backgroundColor: color,
+                  }}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -4,13 +4,9 @@ import React, { useState } from "react";
 import {
   Globe2,
   Heart,
-  ShieldCheck,
   CheckCircle2,
   X,
-  ExternalLink,
   Sparkles,
-  BarChart3,
-  HelpCircle,
   Vote,
 } from "lucide-react";
 
@@ -31,13 +27,12 @@ export default function GlobalGivingDayModal({
   if (!isOpen) return null;
 
   const causes = [
-    { id: "hunger", name: "Food & Hunger Relief", icon: "🍲", desc: "Midday hot meals for school children & food pantries", votes: 42100 },
-    { id: "shelter", name: "Homeless Shelter & Blankets", icon: "🏠", desc: "Emergency night shelters & winter care kits", votes: 31400 },
-    { id: "education", name: "Children's STEM Education", icon: "📚", desc: "Digital tablets & books for rural classrooms", votes: 28900 },
-    { id: "medical", name: "Medical Assistance", icon: "🩺", desc: "Mobile clinics, first-aid and pediatric health checks", votes: 19800 },
-    { id: "disaster", name: "Disaster Emergency Relief", icon: "🚨", desc: "Rapid response food, shelter and hygiene kits", votes: 15400 },
-    { id: "water", name: "Clean Water & Sanitation", icon: "💧", desc: "Solar-powered well filtration & community taps", votes: 12600 },
-    { id: "climate", name: "Environmental Protection", icon: "🌱", desc: "Mangrove restoration & urban afforestation", votes: 9400 },
+    { id: "hunger", name: "Food & Hunger Relief", icon: "🍲", desc: "School meals & food pantries" },
+    { id: "shelter", name: "Shelter & Blankets", icon: "🏠", desc: "Emergency night shelters" },
+    { id: "education", name: "Children's Education", icon: "📚", desc: "Books & school supplies" },
+    { id: "medical", name: "Medical Assistance", icon: "🩺", desc: "Mobile clinics & first-aid" },
+    { id: "disaster", name: "Emergency Relief", icon: "🚨", desc: "Rapid disaster response" },
+    { id: "water", name: "Clean Water", icon: "💧", desc: "Clean water filtration" },
   ];
 
   const handleCastVote = () => {
@@ -45,187 +40,105 @@ export default function GlobalGivingDayModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-3xl w-full border border-[#DDE3EA] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        {/* Modal Top Header */}
-        <div className="bg-gradient-to-r from-[#001435] via-[#003087] to-[#0070E0] p-6 text-white relative">
+    <div className="fixed inset-0 z-50 bg-[#001435]/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full border border-[#DDE3EA] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-in slide-in-from-bottom-8 duration-200">
+        {/* Header */}
+        <div className="bg-[#003087] p-5 text-white relative shrink-0">
           <button
             onClick={onClose}
-            className="absolute top-5 right-5 text-white/70 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
+            className="absolute top-4 right-4 text-white/70 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
 
-          <div className="flex items-center space-x-2 mb-2">
-            <span className="bg-[#FFC439] text-[#001435] text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-xs">
-              <Sparkles className="w-3 h-3" /> OFFICIAL CSR INITIATIVE
+          <div className="flex items-center space-x-1.5 mb-1.5">
+            <span className="bg-[#FFC439] text-[#001435] text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+              <Sparkles className="w-2.5 h-2.5" /> Corporate Giving
             </span>
-            <span className="text-blue-200 text-xs">• 100% Corporate Contribution</span>
           </div>
 
-          <h2 className="text-2xl font-black tracking-tight">PayPal Global Giving Day</h2>
-          <p className="text-xs text-blue-100 mt-1 max-w-xl leading-relaxed">
-            Turning Everyday Digital Payments into Global Social Impact — without charging customers or merchants an extra penny.
+          <h2 className="text-xl font-black tracking-tight">PayPal Giving Day</h2>
+          <p className="text-xs text-blue-100 mt-1 leading-relaxed">
+            100% of PayPal's platform earnings today are donated to verified causes — at $0 cost to you.
           </p>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 sm:p-8 space-y-6 max-h-[75vh] overflow-y-auto">
-          {/* Section 1: The Core Idea */}
-          <div className="bg-[#F5F7FA] border border-[#DDE3EA] rounded-2xl p-5">
-            <h3 className="text-sm font-extrabold text-[#001435] flex items-center gap-2">
-              <Globe2 className="w-4 h-4 text-[#0070E0]" />
-              How Global Giving Day Works
-            </h3>
-            <p className="text-xs text-[#536477] mt-2 leading-relaxed">
-              On this designated day, PayPal voluntarily commits a defined portion—up to <strong>100% of its eligible platform earnings</strong>—from
-              commercial transactions processed to certified global charitable causes.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 text-xs">
-              <div className="bg-white p-3 rounded-xl border border-[#DDE3EA]">
-                <p className="font-extrabold text-[#003087]">1. Customers Shop</p>
-                <p className="text-[#536477] mt-1 text-[11px]">
-                  Pay as usual. Zero donation fee, zero round-up surcharge.
-                </p>
-              </div>
-
-              <div className="bg-white p-3 rounded-xl border border-[#DDE3EA]">
-                <p className="font-extrabold text-[#003087]">2. Merchants Receive</p>
-                <p className="text-[#536477] mt-1 text-[11px]">
-                  Settled under normal terms. Zero extra deduction from business payouts.
-                </p>
-              </div>
-
-              <div className="bg-white p-3 rounded-xl border border-[#DDE3EA]">
-                <p className="font-extrabold text-[#00875A]">3. PayPal Gives</p>
-                <p className="text-[#536477] mt-1 text-[11px]">
-                  100% corporate funded from transaction margins via PayPal Giving Fund.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Section 2: Public Cause Voting (Democratized Giving) */}
+        {/* Scrollable Body */}
+        <div className="p-4 space-y-4 overflow-y-auto">
+          {/* Cause Voting Section */}
           <div>
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h3 className="text-sm font-extrabold text-[#001435] flex items-center gap-2">
-                  <Vote className="w-4 h-4 text-rose-500" />
-                  Democratized Cause Voting
-                </h3>
-                <p className="text-xs text-[#536477]">
-                  Vote to direct where PayPal's corporate donation pool should be allocated today:
-                </p>
-              </div>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-xs font-extrabold text-[#001435] flex items-center gap-1.5 uppercase tracking-wider">
+                <Vote className="w-3.5 h-3.5 text-rose-500" />
+                <span>Vote for a Cause</span>
+              </h3>
               {hasVoted && (
-                <span className="bg-[#EBF9F1] text-[#00875A] border border-[#A3E9C4] text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" /> Vote Recorded!
+                <span className="bg-[#EBF9F1] text-[#00875A] text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3" /> Voted!
                 </span>
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="space-y-2">
               {causes.map((c) => {
                 const isSelected = selectedCause === c.id;
                 return (
                   <div
                     key={c.id}
                     onClick={() => { setSelectedCause(c.id); setHasVoted(false); }}
-                    className={`p-3 rounded-xl border cursor-pointer transition-all flex items-start space-x-3 ${
+                    className={`p-3 rounded-2xl border cursor-pointer transition-all flex items-center space-x-3 ${
                       isSelected
                         ? "bg-[#E5F2FC] border-[#0070E0] shadow-2xs"
-                        : "bg-white border-[#DDE3EA] hover:border-gray-400"
+                        : "bg-white border-[#E5E9EE] hover:border-gray-300"
                     }`}
                   >
                     <span className="text-xl shrink-0">{c.icon}</span>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-extrabold text-[#001435]">{c.name}</p>
-                        <span className="text-[10px] text-[#536477] font-bold">{(c.votes + (isSelected && hasVoted ? 1 : 0)).toLocaleString()} votes</span>
-                      </div>
-                      <p className="text-[11px] text-[#536477] mt-0.5 line-clamp-1">{c.desc}</p>
+                      <p className="text-xs font-extrabold text-[#001435]">{c.name}</p>
+                      <p className="text-[11px] text-[#8B95A5] truncate">{c.desc}</p>
                     </div>
+                    {isSelected && (
+                      <div className="w-4 h-4 rounded-full bg-[#0070E0] flex items-center justify-center text-white shrink-0">
+                        <CheckCircle2 className="w-3 h-3" />
+                      </div>
+                    )}
                   </div>
                 );
               })}
             </div>
 
-            <div className="mt-4 flex justify-end">
+            <div className="mt-3">
               <button
                 type="button"
                 onClick={handleCastVote}
                 disabled={hasVoted}
-                className={`px-5 py-2 rounded-full text-xs font-black transition-all cursor-pointer ${
+                className={`w-full py-2.5 rounded-full text-xs font-black transition-all cursor-pointer ${
                   hasVoted
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-[#003087] hover:bg-[#002266] text-white shadow-xs"
+                    : "bg-[#003087] hover:bg-[#002060] text-white shadow-xs"
                 }`}
               >
-                {hasVoted ? "Thank You for Voting!" : "Cast My Cause Vote"}
+                {hasVoted ? "Vote Recorded — Thank You!" : "Cast My Cause Vote"}
               </button>
-            </div>
-          </div>
-
-          {/* Section 3: Live Public Transparency Dashboard Snapshot */}
-          <div className="bg-[#001435] text-white rounded-2xl p-5 border border-[#002244]">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <div className="flex items-center space-x-2">
-                <BarChart3 className="w-4 h-4 text-[#FFC439]" />
-                <h4 className="text-xs font-extrabold uppercase tracking-wider text-white">
-                  Audited Transparency Dashboard (Live Snapshot)
-                </h4>
-              </div>
-              <span className="text-[10px] text-blue-200">Independent Auditor: Deloitte LLP</span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 text-center">
-              <div>
-                <p className="text-[10px] text-blue-200 font-bold uppercase">Eligible Volume</p>
-                <p className="text-base font-black text-white mt-1">$1.24 Billion</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-blue-200 font-bold uppercase">Take Rate Revenue</p>
-                <p className="text-base font-black text-white mt-1">$24.8 Million</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-[#FFC439] font-bold uppercase">Corporate Pledge</p>
-                <p className="text-base font-black text-[#FFC439] mt-1">$18.6 Million</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-green-300 font-bold uppercase">Verified Disbursed</p>
-                <p className="text-base font-black text-green-400 mt-1">$14.2 Million</p>
-              </div>
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-blue-200">
-              <span>Rule: Never describe a donation as completed until the recipient has actually received the funds.</span>
-              <span className="text-white font-bold">76.3% Settled</span>
             </div>
           </div>
         </div>
 
-        {/* Modal Footer */}
-        <div className="bg-[#F5F7FA] px-6 py-4 border-t border-[#DDE3EA] flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-[#536477]">
-            Want to also contribute a portion of your personal rewards?
-          </p>
-
-          <div className="flex items-center space-x-3 w-full sm:w-auto justify-end">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 rounded-full text-xs font-bold text-[#536477] hover:text-[#001435]"
-            >
-              Close
-            </button>
-            <button
-              onClick={() => { onClose(); onGoToRewardsForGood(); }}
-              className="flex items-center space-x-2 px-5 py-2 rounded-full text-xs font-extrabold bg-[#0070E0] hover:bg-[#005bb5] text-white shadow-xs cursor-pointer"
-            >
-              <Heart className="w-3.5 h-3.5 text-rose-300 fill-rose-300" />
-              <span>Go to Rewards for Good</span>
-            </button>
-          </div>
+        {/* Footer */}
+        <div className="bg-[#F5F7FA] px-4 py-3 border-t border-[#E5E9EE] flex items-center justify-between shrink-0">
+          <button
+            onClick={onClose}
+            className="text-xs font-bold text-[#8B95A5] hover:text-[#001435] cursor-pointer"
+          >
+            Close
+          </button>
+          <button
+            onClick={() => { onClose(); onGoToRewardsForGood(); }}
+            className="flex items-center space-x-1.5 px-4 py-2 rounded-full text-xs font-extrabold bg-[#0070E0] hover:bg-[#005bb5] text-white shadow-xs cursor-pointer"
+          >
+            <Heart className="w-3.5 h-3.5 text-rose-300 fill-rose-300" />
+            <span>Donate Rewards</span>
+          </button>
         </div>
       </div>
     </div>

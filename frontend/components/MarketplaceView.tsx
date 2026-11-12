@@ -21,13 +21,13 @@ interface MarketplaceViewProps {
 }
 
 const CATEGORIES = [
-  { id: "all", name: "All Rewards", icon: Tag },
-  { id: "food", name: "Food Delivery", icon: UtensilsCrossed },
-  { id: "taxi", name: "Taxi & Rides", icon: Car },
-  { id: "shopping", name: "Online Shopping", icon: ShoppingBag },
-  { id: "groceries", name: "Groceries", icon: Apple },
-  { id: "entertainment", name: "Entertainment", icon: Film },
-  { id: "travel", name: "Travel & Hotels", icon: Plane },
+  { id: "all", name: "All", icon: Tag },
+  { id: "food", name: "Food", icon: UtensilsCrossed },
+  { id: "taxi", name: "Rides", icon: Car },
+  { id: "shopping", name: "Shop", icon: ShoppingBag },
+  { id: "groceries", name: "Grocery", icon: Apple },
+  { id: "entertainment", name: "Movies", icon: Film },
+  { id: "travel", name: "Travel", icon: Plane },
 ];
 
 export default function MarketplaceView({
@@ -49,110 +49,79 @@ export default function MarketplaceView({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Search and Category Filters */}
-      <div className="p-6 bg-white rounded-2xl border border-[#DDE3EA] shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h2 className="text-2xl font-black text-[#001435]">Reward Marketplace</h2>
-            <p className="text-xs text-[#536477]">
-              Browse merchant offers redeemable with your PayPal account
-            </p>
-          </div>
-
-          <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-[#536477] absolute left-3.5 top-3" />
-            <input
-              type="text"
-              placeholder="Search by merchant or category..."
-              value={searchText}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="w-full pl-10 pr-3.5 py-2 text-xs border border-[#DDE3EA] rounded-full focus:outline-none focus:ring-2 focus:ring-[#0070E0] bg-[#F5F7FA]"
-            />
-          </div>
-        </div>
-
-        {/* Category Filter Pills (PayPal Style) */}
-        <div className="flex items-center space-x-2 overflow-x-auto pb-1">
-          {CATEGORIES.map((cat) => {
-            const Icon = cat.icon;
-            const isSelected = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => handleCategoryClick(cat.id)}
-                className={`flex items-center space-x-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition ${
-                  isSelected
-                    ? "bg-[#003087] text-white shadow-xs"
-                    : "bg-[#F5F7FA] text-[#536477] hover:bg-[#EBF3FB] hover:text-[#001435] border border-[#DDE3EA]"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{cat.name}</span>
-              </button>
-            );
-          })}
-        </div>
+    <div className="space-y-3.5">
+      {/* Search Input Bar (PayPal Rounded Full) */}
+      <div className="relative">
+        <Search className="w-4 h-4 text-[#8B95A5] absolute left-3.5 top-3" />
+        <input
+          type="text"
+          placeholder="Search partner deals..."
+          value={searchText}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          className="w-full pl-10 pr-3.5 py-2.5 text-xs border border-[#E5E9EE] rounded-full focus:outline-none focus:ring-2 focus:ring-[#0070E0] bg-white text-[#001435] shadow-2xs"
+        />
       </div>
 
-      {/* Coupons Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Horizontal Category Filter Pills */}
+      <div className="flex items-center space-x-1.5 overflow-x-auto hide-scrollbar py-0.5">
+        {CATEGORIES.map((cat) => {
+          const Icon = cat.icon;
+          const isSelected = selectedCategory === cat.id;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => handleCategoryClick(cat.id)}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                isSelected
+                  ? "bg-[#003087] text-white shadow-xs"
+                  : "bg-white text-[#536477] hover:bg-[#F5F7FA] border border-[#E5E9EE]"
+              }`}
+            >
+              <Icon className="w-3 h-3" />
+              <span>{cat.name}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Deals Stack (Mobile Single Column) */}
+      <div className="space-y-3">
         {coupons.map((coupon) => (
           <div
             key={coupon.id}
-            className="rounded-2xl bg-white border border-[#DDE3EA] shadow-xs hover:shadow-md transition overflow-hidden flex flex-col justify-between"
+            className="rounded-3xl bg-white border border-[#E5E9EE] p-4 shadow-2xs hover:shadow-sm transition-all"
           >
-            <div className="p-5 space-y-3">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="text-[11px] font-extrabold text-[#536477] uppercase tracking-wider block">
-                    {coupon.merchant_name}
-                  </span>
-                  <span className="text-xs font-bold text-[#0070E0] capitalize">
-                    {coupon.category}
-                  </span>
-                </div>
-                <div className="bg-[#EBF3FB] text-[#003087] text-xs font-black px-3 py-1 rounded-full border border-[#BDE0FE]">
-                  {coupon.discount_type === "percentage" ? `${coupon.discount_value}% OFF` : `₹${coupon.discount_value} OFF`}
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-extrabold text-[#001435] text-sm leading-snug">
+            <div className="flex justify-between items-start">
+              <div className="flex-1 pr-2">
+                <span className="text-[10px] font-extrabold text-[#8B95A5] uppercase tracking-wider block">
+                  {coupon.merchant_name}
+                </span>
+                <h4 className="font-extrabold text-xs text-[#001435] mt-0.5 leading-snug">
                   {coupon.title}
                 </h4>
-                <p className="text-xs text-[#536477] mt-1 line-clamp-2 leading-relaxed">
+                <p className="text-[11px] text-[#536477] mt-1 line-clamp-2 leading-relaxed">
                   {coupon.description}
                 </p>
               </div>
 
-              {/* Promo Code Badge */}
-              <div className="flex items-center justify-between text-xs bg-[#F5F7FA] p-2.5 rounded-xl border border-[#DDE3EA] font-mono">
-                <span className="text-[#536477] text-[10px] font-bold">CODE:</span>
-                <span className="font-bold text-[#001435] tracking-wide">{coupon.code}</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 text-[#536477]">
-                <div>
-                  <span className="block text-[#536477]">Min Purchase:</span>
-                  <span className="font-bold text-[#001435]">₹{coupon.min_order_amount}</span>
-                </div>
-                <div>
-                  <span className="block text-[#536477]">Expires:</span>
-                  <span className="font-medium text-[#001435]">
-                    {new Date(coupon.expiry_date).toLocaleDateString()}
-                  </span>
-                </div>
+              {/* Discount Badge */}
+              <div className="bg-[#EBF9F1] text-[#00875A] text-xs font-black px-2.5 py-1 rounded-full border border-[#D5F5E3] shrink-0">
+                {coupon.discount_type === "percentage" ? `${coupon.discount_value}% OFF` : `₹${coupon.discount_value} OFF`}
               </div>
             </div>
 
-            <div className="p-4 bg-[#F5F7FA] border-t border-[#DDE3EA]">
+            {/* Bottom bar with min spend & claim button */}
+            <div className="mt-3 pt-2.5 border-t border-[#F0F2F5] flex items-center justify-between">
+              <span className="text-[10px] text-[#8B95A5]">
+                Min order: ₹{coupon.min_order_amount}
+              </span>
+
               <button
                 onClick={() => onSelectCouponForCheckout(coupon)}
-                className="w-full bg-[#0070E0] hover:bg-[#003087] text-white font-extrabold py-2.5 px-4 rounded-full text-xs transition flex items-center justify-center space-x-1.5 shadow-xs"
+                className="bg-[#0070E0] hover:bg-[#003087] text-white font-extrabold py-1.5 px-4 rounded-full text-xs transition-all flex items-center space-x-1 shadow-xs cursor-pointer"
               >
-                <span>Redeem with PayPal</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>Redeem</span>
+                <ArrowRight className="w-3 h-3" />
               </button>
             </div>
           </div>

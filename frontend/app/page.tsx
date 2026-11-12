@@ -14,6 +14,7 @@ import AgenticCommerceDrawer from "../components/AgenticCommerceDrawer";
 import GlobalGivingDayBanner from "../components/GlobalGivingDayBanner";
 import GlobalGivingDayModal from "../components/GlobalGivingDayModal";
 import SocialImpactView from "../components/SocialImpactView";
+import { Bell, Sparkles } from "lucide-react";
 
 import {
   demoLogin,
@@ -54,13 +55,11 @@ export default function Home() {
       const user = loginResp.user;
       setCurrentUser(user);
 
-      // Route tab automatically if merchant or admin persona is selected
       if (user.role === "merchant") {
         setActiveTab("merchant");
       } else if (user.role === "admin") {
         setActiveTab("admin");
       } else {
-        // Customer profile: load data
         if (activeTab === "merchant" || activeTab === "admin") {
           setActiveTab("dashboard");
         }
@@ -109,14 +108,43 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] flex flex-col font-sans">
-      {/* Global Giving Day Announcement Top Bar */}
+    <div className="app-shell flex flex-col font-sans">
+      {/* Top Mobile PayPal Header */}
+      <header className="sticky top-0 z-40 bg-[#003087] text-white px-4 py-3 flex items-center justify-between shadow-xs">
+        <div className="flex items-center space-x-2.5">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-xs">
+            <span className="font-black text-lg italic text-[#003087] leading-none">P</span>
+          </div>
+          <div>
+            <div className="flex items-center space-x-1.5 leading-none">
+              <span className="font-black text-white text-base tracking-tight">PayPal</span>
+              <span className="font-medium text-[#70BAFF] text-xs">Rewards</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right actions: notification + profile avatar */}
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => setIsGivingDayModalOpen(true)}
+            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/90 hover:bg-white/20 transition-all"
+            title="Global Giving"
+          >
+            <Sparkles className="w-4 h-4 text-[#FFC439]" />
+          </button>
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0070E0] to-[#009CDE] text-white font-bold text-xs flex items-center justify-center border border-white/20 shadow-xs">
+            {currentUser?.full_name?.charAt(0) || "P"}
+          </div>
+        </div>
+      </header>
+
+      {/* Global Giving Day Slim Banner */}
       <GlobalGivingDayBanner
         onOpenGivingDayModal={() => setIsGivingDayModalOpen(true)}
         onNavigateToGivingTab={() => setActiveTab("giving_day")}
       />
 
-      {/* 1-Click Demo Persona Bar */}
+      {/* Compact Demo Persona Strip */}
       <DemoPersonaBar
         currentPersona={currentPersonaKey}
         onSelectPersona={switchPersona}
@@ -124,7 +152,105 @@ export default function Home() {
         isLoading={isLoading}
       />
 
-      {/* Main Navigation */}
+      {/* Sub-navigation for "More" tab views (Analytics, Merchant, Admin) */}
+      {["analytics", "merchant", "admin"].includes(activeTab) && (
+        <div className="bg-white border-b border-[#E5E9EE] px-4 py-2 flex items-center space-x-2 overflow-x-auto hide-scrollbar">
+          <button
+            onClick={() => setActiveTab("analytics")}
+            className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+              activeTab === "analytics"
+                ? "bg-[#003087] text-white"
+                : "bg-[#F5F7FA] text-[#536477]"
+            }`}
+          >
+            Ledger & Data
+          </button>
+          <button
+            onClick={() => setActiveTab("merchant")}
+            className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+              activeTab === "merchant"
+                ? "bg-[#003087] text-white"
+                : "bg-[#F5F7FA] text-[#536477]"
+            }`}
+          >
+            Merchant Hub
+          </button>
+          <button
+            onClick={() => setActiveTab("admin")}
+            className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+              activeTab === "admin"
+                ? "bg-[#003087] text-white"
+                : "bg-[#F5F7FA] text-[#536477]"
+            }`}
+          >
+            Operations
+          </button>
+        </div>
+      )}
+
+      {/* Main Scrollable Content */}
+      <main className="app-content px-3.5 py-3.5">
+        {activeTab === "dashboard" && (
+          <div className="view-enter">
+            <CustomerDashboardView
+              insights={spendingInsights}
+              recommendations={recommendations}
+              onSelectCouponForCheckout={handleOpenCheckout}
+              onExploreMoreRecommendations={() => setActiveTab("recommendations")}
+              onNavigateToGivingTab={() => setActiveTab("giving_day")}
+            />
+          </div>
+        )}
+
+        {activeTab === "recommendations" && (
+          <div className="view-enter">
+            <RecommendationsView
+              recommendations={recommendations}
+              onSelectCouponForCheckout={handleOpenCheckout}
+              isLoading={isLoading}
+            />
+          </div>
+        )}
+
+        {activeTab === "marketplace" && (
+          <div className="view-enter">
+            <MarketplaceView
+              coupons={coupons}
+              onSelectCouponForCheckout={handleOpenCheckout}
+              onFilterChange={handleFilterChange}
+            />
+          </div>
+        )}
+
+        {activeTab === "giving_day" && (
+          <div className="view-enter">
+            <SocialImpactView
+              currentUser={currentUser}
+              onOpenGivingDayModal={() => setIsGivingDayModalOpen(true)}
+            />
+          </div>
+        )}
+
+        {activeTab === "analytics" && (
+          <div className="view-enter">
+            <AnalyticsView />
+          </div>
+        )}
+
+        {activeTab === "merchant" && (
+          <div className="view-enter">
+            <MerchantView currentUser={currentUser} />
+          </div>
+        )}
+
+        {activeTab === "admin" && (
+          <div className="view-enter">
+            <AdminView />
+          </div>
+        )}
+      </main>
+
+      {/* Fixed Bottom Navigation Bar & Floating AI Copilot */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -133,49 +259,7 @@ export default function Home() {
         isAgentOpen={isAgentDrawerOpen}
       />
 
-      {/* Main Page Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {activeTab === "dashboard" && (
-          <CustomerDashboardView
-            insights={spendingInsights}
-            recommendations={recommendations}
-            onSelectCouponForCheckout={handleOpenCheckout}
-            onExploreMoreRecommendations={() => setActiveTab("recommendations")}
-            onNavigateToGivingTab={() => setActiveTab("giving_day")}
-          />
-        )}
-
-        {activeTab === "recommendations" && (
-          <RecommendationsView
-            recommendations={recommendations}
-            onSelectCouponForCheckout={handleOpenCheckout}
-            isLoading={isLoading}
-          />
-        )}
-
-        {activeTab === "marketplace" && (
-          <MarketplaceView
-            coupons={coupons}
-            onSelectCouponForCheckout={handleOpenCheckout}
-            onFilterChange={handleFilterChange}
-          />
-        )}
-
-        {activeTab === "giving_day" && (
-          <SocialImpactView
-            currentUser={currentUser}
-            onOpenGivingDayModal={() => setIsGivingDayModalOpen(true)}
-          />
-        )}
-
-        {activeTab === "analytics" && <AnalyticsView />}
-
-        {activeTab === "merchant" && <MerchantView currentUser={currentUser} />}
-
-        {activeTab === "admin" && <AdminView />}
-      </main>
-
-      {/* PayPal Global Giving Day Explainer & Cause Voting Modal */}
+      {/* PayPal Global Giving Day Modal */}
       <GlobalGivingDayModal
         isOpen={isGivingDayModalOpen}
         onClose={() => setIsGivingDayModalOpen(false)}
@@ -198,21 +282,6 @@ export default function Home() {
         currentUser={currentUser}
         onSelectCouponForCheckout={handleOpenCheckout}
       />
-
-      {/* Footer (PayPal Style) */}
-      <footer className="border-t border-[#DDE3EA] bg-white py-6 mt-12 text-center text-xs text-[#536477]">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-          <div className="flex items-center space-x-2">
-            <span className="font-extrabold text-[#003087]">PayPal</span>
-            <span className="font-bold text-[#0070E0]">SmartRewards AI</span>
-            <span>•</span>
-            <span className="text-[#536477]">PayPal AI Hackathon 2026</span>
-          </div>
-          <p className="text-[#536477]">
-            Official PayPal Orders API v2 Sandbox Integration & Machine Learning Recommendation Platform
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

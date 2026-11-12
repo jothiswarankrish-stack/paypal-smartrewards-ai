@@ -35,17 +35,17 @@ export default function AgenticCommerceDrawer({
   >([
     {
       sender: "agent",
-      text: "Hello! I am your PayPal SmartRewards AI Shopping Copilot. Tell me what you'd like to purchase or your target budget (e.g., 'I want food for ₹500' or 'Find taxi discounts'), and I will scan active partner rewards, compute your exact savings, and prepare a PayPal Sandbox checkout for your approval!",
+      text: "Hi! I'm your PayPal Shopping Assistant. Tell me what you're looking for (e.g., 'Find food for ₹500' or 'Uber cab discount'), and I'll find the best deals for you!",
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const quickPrompts = [
-    "I want food for ₹500",
-    "Find taxi discounts under ₹400",
-    "Shopping deals for ₹2000",
-    "Save money on grocery essentials",
+    "Food under ₹500",
+    "Taxi deals",
+    "Shopping offers",
+    "Grocery discounts",
   ];
 
   const handleSendMessage = async (msgText: string) => {
@@ -73,7 +73,7 @@ export default function AgenticCommerceDrawer({
         ...prev,
         {
           sender: "agent",
-          text: "I experienced an error analyzing active deals. Please try rephrasing your request!",
+          text: "I couldn't find deals right now. Please try again!",
         },
       ]);
     } finally {
@@ -105,142 +105,136 @@ export default function AgenticCommerceDrawer({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white shadow-2xl border-l border-[#DDE3EA] flex flex-col animate-in slide-in-from-right duration-300">
-      {/* PayPal Branded Drawer Header */}
-      <div className="p-4 border-b border-[#DDE3EA] bg-[#F0F7FD] flex justify-between items-center">
-        <div className="flex items-center space-x-2.5">
-          <div className="w-9 h-9 rounded-xl bg-[#0070E0] text-white flex items-center justify-center font-bold shadow-xs">
-            <Bot className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h3 className="font-extrabold text-[#001435] text-sm flex items-center space-x-1.5">
-              <span>AI Shopping Copilot</span>
-              <span className="bg-[#003087] text-white text-[9px] px-2 py-0.5 rounded-full uppercase font-black">
-                Agentic
-              </span>
-            </h3>
-            <p className="text-[11px] text-[#536477]">Autonomous deal discovery with explicit approval</p>
-          </div>
-        </div>
-        <button
-          onClick={onClose}
-          className="p-1.5 rounded-full text-[#536477] hover:text-[#001435] hover:bg-white transition"
-        >
-          <X className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Chat Messages Surface (Clean White & Light Blue) */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
-        {messages.map((m, idx) => (
-          <div
-            key={idx}
-            className={`flex flex-col ${m.sender === "user" ? "items-end" : "items-start"}`}
-          >
-            <div
-              className={`max-w-[85%] rounded-2xl p-4 text-xs ${
-                m.sender === "user"
-                  ? "bg-[#0070E0] text-white rounded-br-xs shadow-xs font-semibold"
-                  : "bg-[#F0F7FD] text-[#001435] rounded-bl-xs border border-[#BDE0FE]"
-              }`}
-            >
-              <p className="leading-relaxed font-medium">{m.text}</p>
-
-              {/* Deal Comparison Cards */}
-              {m.deals && m.deals.length > 0 && (
-                <div className="mt-3.5 space-y-2.5 pt-2.5 border-t border-[#BDE0FE]">
-                  <p className="font-extrabold text-[11px] text-[#003087] flex items-center space-x-1">
-                    <Sparkles className="w-3 h-3 text-[#0070E0]" />
-                    <span>Ranked Deal Proposal:</span>
-                  </p>
-                  {m.deals.slice(0, 2).map((deal, dIdx) => (
-                    <div
-                      key={dIdx}
-                      className="p-3 bg-white rounded-xl border border-[#DDE3EA] shadow-xs space-y-2 text-[#001435]"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <span className="text-[10px] font-extrabold text-[#0070E0] uppercase tracking-wider">
-                            {deal.merchant_name}
-                          </span>
-                          <h5 className="font-bold text-xs">{deal.coupon_title}</h5>
-                        </div>
-                        <span className="bg-[#E3FCEF] text-[#00875A] text-[10px] font-black px-2 py-0.5 rounded-full border border-[#ABF5D1]">
-                          {deal.savings_percentage}% OFF
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-baseline text-xs bg-[#F5F7FA] p-2 rounded-lg">
-                        <span className="text-[#536477] line-through">₹{deal.original_price}</span>
-                        <span className="font-black text-[#003087] text-sm">
-                          ₹{deal.final_price}
-                        </span>
-                        <span className="text-[#00875A] font-bold text-[11px]">
-                          Save ₹{deal.discount_amount}
-                        </span>
-                      </div>
-
-                      {/* Explicit User Approval Button (PayPal Gold) */}
-                      <button
-                        onClick={() => handleApproveDeal(deal)}
-                        className="w-full bg-[#FFC439] hover:bg-[#F2B82E] text-[#001435] font-black py-2.5 px-3 rounded-full text-xs transition flex items-center justify-center space-x-1.5 border border-[#E5AD24] shadow-xs"
-                      >
-                        <CheckCircle className="w-3.5 h-3.5 text-[#001435]" />
-                        <span>Approve & Checkout with PayPal</span>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+    <div className="fixed inset-0 z-50 bg-[#001435]/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-[#DDE3EA] h-[85vh] sm:h-[650px] flex flex-col animate-in slide-in-from-bottom-8 duration-200">
+        {/* Header */}
+        <div className="p-4 border-b border-[#E5E9EE] bg-[#003087] text-white flex justify-between items-center shrink-0">
+          <div className="flex items-center space-x-2.5">
+            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold">
+              <Bot className="w-4 h-4 text-[#FFC439]" />
+            </div>
+            <div>
+              <h3 className="font-extrabold text-sm flex items-center space-x-1.5">
+                <span>AI Shopping Assistant</span>
+              </h3>
+              <p className="text-[10px] text-blue-200">Personalized deal finder</p>
             </div>
           </div>
-        ))}
-
-        {isLoading && (
-          <div className="flex items-center space-x-2 text-xs text-[#536477] p-2 bg-[#F0F7FD] rounded-xl border border-[#BDE0FE]">
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0070E0]" />
-            <span>AI Copilot is analyzing coupons and calculating discounts...</span>
-          </div>
-        )}
-      </div>
-
-      {/* Suggested Quick Prompts */}
-      <div className="px-4 py-2.5 border-t border-[#DDE3EA] bg-[#F5F7FA] flex flex-wrap gap-1.5">
-        {quickPrompts.map((p, idx) => (
           <button
-            key={idx}
-            onClick={() => handleSendMessage(p)}
-            className="text-[10px] bg-white border border-[#DDE3EA] text-[#536477] hover:text-[#001435] hover:bg-[#EBF3FB] px-3 py-1 rounded-full transition font-semibold"
+            onClick={onClose}
+            className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
           >
-            {p}
+            <X className="w-5 h-5" />
           </button>
-        ))}
-      </div>
+        </div>
 
-      {/* Message Input Box */}
-      <div className="p-3.5 border-t border-[#DDE3EA] bg-white">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSendMessage(inputMessage);
-          }}
-          className="flex items-center space-x-2"
-        >
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="E.g., I want to order food for ₹500..."
-            className="flex-1 py-2.5 px-4 text-xs border border-[#DDE3EA] rounded-full focus:outline-none focus:ring-2 focus:ring-[#0070E0] text-[#001435] bg-[#F5F7FA]"
-          />
-          <button
-            type="submit"
-            disabled={!inputMessage.trim() || isLoading}
-            className="p-2.5 bg-[#0070E0] hover:bg-[#003087] disabled:opacity-50 text-white rounded-full transition shadow-xs"
+        {/* Chat Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#F5F7FA]">
+          {messages.map((m, idx) => (
+            <div
+              key={idx}
+              className={`flex flex-col ${m.sender === "user" ? "items-end" : "items-start"}`}
+            >
+              <div
+                className={`max-w-[85%] rounded-2xl p-3 text-xs leading-relaxed ${
+                  m.sender === "user"
+                    ? "bg-[#0070E0] text-white rounded-br-xs font-semibold"
+                    : "bg-white text-[#001435] rounded-bl-xs border border-[#E5E9EE] shadow-2xs"
+                }`}
+              >
+                <p>{m.text}</p>
+
+                {/* Deal Comparison Cards */}
+                {m.deals && m.deals.length > 0 && (
+                  <div className="mt-3 space-y-2 pt-2 border-t border-[#F0F2F5]">
+                    {m.deals.slice(0, 2).map((deal, dIdx) => (
+                      <div
+                        key={dIdx}
+                        className="p-3 bg-[#F8FAFC] rounded-2xl border border-[#E5E9EE] space-y-2 text-[#001435]"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <span className="text-[9px] font-extrabold text-[#0070E0] uppercase tracking-wider">
+                              {deal.merchant_name}
+                            </span>
+                            <h5 className="font-extrabold text-xs">{deal.coupon_title}</h5>
+                          </div>
+                          <span className="bg-[#EBF9F1] text-[#00875A] text-[10px] font-black px-2 py-0.5 rounded-full">
+                            {deal.savings_percentage}% OFF
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between items-baseline text-xs bg-white p-2 rounded-xl border border-[#E5E9EE]">
+                          <span className="text-[#8B95A5] line-through text-[11px]">₹{deal.original_price}</span>
+                          <span className="font-black text-[#003087]">
+                            ₹{deal.final_price}
+                          </span>
+                          <span className="text-[#00875A] font-bold text-[10px]">
+                            Save ₹{deal.discount_amount}
+                          </span>
+                        </div>
+
+                        <button
+                          onClick={() => handleApproveDeal(deal)}
+                          className="w-full bg-[#FFC439] hover:bg-[#F2B82E] text-[#001435] font-black py-2 px-3 rounded-full text-xs transition-all flex items-center justify-center space-x-1.5 shadow-2xs cursor-pointer"
+                        >
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span>Buy with PayPal</span>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+
+          {isLoading && (
+            <div className="flex items-center space-x-2 text-xs text-[#536477] p-2.5 bg-white rounded-2xl border border-[#E5E9EE] w-fit">
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0070E0]" />
+              <span className="text-[11px]">Finding top discounts...</span>
+            </div>
+          )}
+        </div>
+
+        {/* Suggested Quick Prompts */}
+        <div className="px-3 py-2 border-t border-[#E5E9EE] bg-white flex items-center space-x-1.5 overflow-x-auto hide-scrollbar shrink-0">
+          {quickPrompts.map((p, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleSendMessage(p)}
+              className="text-[10px] bg-[#F5F7FA] border border-[#E5E9EE] text-[#536477] hover:text-[#001435] hover:bg-[#EBF3FB] px-2.5 py-1 rounded-full whitespace-nowrap transition-all font-semibold shrink-0 cursor-pointer"
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+
+        {/* Message Input Box */}
+        <div className="p-3 border-t border-[#E5E9EE] bg-white shrink-0">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendMessage(inputMessage);
+            }}
+            className="flex items-center space-x-2"
           >
-            <Send className="w-4 h-4" />
-          </button>
-        </form>
+            <input
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="Ask for deals (e.g. food, rides)..."
+              className="flex-1 py-2 px-3.5 text-xs border border-[#E5E9EE] rounded-full focus:outline-none focus:ring-2 focus:ring-[#0070E0] text-[#001435] bg-[#F5F7FA]"
+            />
+            <button
+              type="submit"
+              disabled={!inputMessage.trim() || isLoading}
+              className="p-2 bg-[#0070E0] hover:bg-[#003087] disabled:opacity-40 text-white rounded-full transition-all shadow-xs cursor-pointer"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

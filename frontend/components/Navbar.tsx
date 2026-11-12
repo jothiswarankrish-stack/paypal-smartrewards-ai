@@ -1,7 +1,14 @@
 "use client";
 
 import React from "react";
-import { Sparkles, Bot, Shield, Store, LayoutDashboard, Ticket, BarChart3, Heart } from "lucide-react";
+import {
+  Home,
+  Sparkles,
+  Ticket,
+  Heart,
+  Menu,
+  Bot,
+} from "lucide-react";
 import { User } from "../types";
 
 interface NavbarProps {
@@ -18,98 +25,90 @@ export default function Navbar({
   toggleAgent,
   isAgentOpen,
 }: NavbarProps) {
-  const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "recommendations", label: "AI Rewards", icon: Sparkles, badge: "Personalized" },
-    { id: "marketplace", label: "Coupons", icon: Ticket },
-    { id: "giving_day", label: "Rewards for Good", icon: Heart, badge: "Giving Day" },
-    { id: "analytics", label: "Analytics", icon: BarChart3 },
-    { id: "merchant", label: "Merchant Portal", icon: Store },
-    { id: "admin", label: "Admin Operations", icon: Shield },
+  const tabs = [
+    { id: "dashboard", label: "Home", icon: Home },
+    { id: "recommendations", label: "Rewards", icon: Sparkles },
+    { id: "marketplace", label: "Deals", icon: Ticket },
+    { id: "giving_day", label: "Giving", icon: Heart },
+    { id: "more", label: "More", icon: Menu },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-[#DDE3EA] shadow-2xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-18 items-center">
-          {/* Logo & Brand: Recognizable PayPal Identity */}
-          <div
-            className="flex items-center space-x-3 cursor-pointer py-1"
-            onClick={() => setActiveTab("dashboard")}
-          >
-            {/* PayPal Double-P Inspired Monogram */}
-            <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#003087] via-[#0070E0] to-[#009CDE] flex items-center justify-center text-white font-black text-xl shadow-xs">
-                <span className="italic font-extrabold tracking-tighter">P</span>
-              </div>
-            </div>
+    <>
+      {/* Fixed Bottom Tab Bar */}
+      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50 bg-white border-t border-[#E5E9EE] shadow-[0_-2px_12px_rgba(0,0,0,0.06)]"
+        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      >
+        <div className="flex items-center justify-around px-1 pt-1.5 pb-1">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive =
+              tab.id === "more"
+                ? ["analytics", "merchant", "admin", "more"].includes(activeTab)
+                : activeTab === tab.id;
 
-            <div>
-              <div className="flex items-center space-x-1.5 leading-none">
-                <span className="font-extrabold text-[#003087] text-xl tracking-tight">PayPal</span>
-                <span className="font-bold text-[#0070E0] text-xl tracking-tight">SmartRewards</span>
-                <span className="bg-[#E5F2FC] text-[#0070E0] border border-[#BDE0FE] text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider ml-1">
-                  AI 2026
-                </span>
-              </div>
-              <p className="text-[11px] text-[#536477] font-medium mt-1">
-                Personalized Financial Benefits & Sandbox Checkout
-              </p>
-            </div>
-          </div>
-
-          {/* Navigation Links (PayPal style) */}
-          <nav className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center space-x-2 px-3.5 py-2 rounded-full text-xs font-bold transition-all ${
-                    isActive
-                      ? "bg-[#003087] text-white shadow-xs"
-                      : "text-[#536477] hover:text-[#001435] hover:bg-[#F5F7FA]"
+            return (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  if (tab.id === "more") {
+                    setActiveTab("analytics");
+                  } else {
+                    setActiveTab(tab.id);
+                  }
+                }}
+                className={`flex flex-col items-center justify-center w-16 py-1.5 rounded-xl transition-all ${
+                  isActive
+                    ? "text-[#003087]"
+                    : "text-[#8B95A5]"
+                }`}
+              >
+                <div className={`relative ${isActive ? "scale-110" : ""} transition-transform`}>
+                  <Icon
+                    className={`w-[22px] h-[22px] ${
+                      isActive ? "text-[#003087]" : "text-[#8B95A5]"
+                    }`}
+                    strokeWidth={isActive ? 2.5 : 1.8}
+                  />
+                  {tab.id === "recommendations" && (
+                    <span className="absolute -top-1 -right-1.5 w-2 h-2 bg-[#0070E0] rounded-full" />
+                  )}
+                </div>
+                <span
+                  className={`text-[10px] mt-0.5 font-semibold ${
+                    isActive ? "text-[#003087] font-bold" : "text-[#8B95A5]"
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-white" : "text-[#536477]"}`} />
-                  <span>{item.label}</span>
-                  {item.badge && (
-                    <span
-                      className={`text-[9px] font-extrabold px-1.5 py-0.2 rounded-full uppercase ${
-                        isActive
-                          ? "bg-[#0070E0] text-white"
-                          : "bg-[#E5F2FC] text-[#0070E0]"
-                      }`}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right Action: AI Shopping Copilot Button */}
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={toggleAgent}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs font-bold transition-all border ${
-                isAgentOpen
-                  ? "bg-[#0070E0] text-white border-[#0070E0] shadow-sm ring-2 ring-[#009CDE]/40"
-                  : "bg-[#F0F7FD] text-[#003087] border-[#DDE3EA] hover:bg-[#E5F2FC] hover:border-[#0070E0]"
-              }`}
-            >
-              <Bot className={`w-4 h-4 ${isAgentOpen ? "text-white animate-pulse" : "text-[#0070E0]"}`} />
-              <span className="hidden sm:inline">AI Shopping Copilot</span>
-              <span className="bg-[#009CDE] text-white text-[9px] px-1.5 py-0.2 rounded-full font-black uppercase">
-                Agentic
-              </span>
-            </button>
-          </div>
+                  {tab.label}
+                </span>
+                {isActive && (
+                  <div className="w-5 h-[3px] bg-[#003087] rounded-full mt-0.5" />
+                )}
+              </button>
+            );
+          })}
         </div>
-      </div>
-    </header>
+      </nav>
+
+      {/* Floating AI Copilot Button */}
+      <button
+        onClick={toggleAgent}
+        className={`fixed z-50 right-4 shadow-lg transition-all duration-300 ${
+          isAgentOpen
+            ? "bottom-24 bg-[#003087] ring-2 ring-[#0070E0]/40"
+            : "bottom-24 bg-[#0070E0] hover:bg-[#003087]"
+        } w-14 h-14 rounded-full flex items-center justify-center`}
+        style={{ right: "max(16px, calc(50% - 200px))" }}
+      >
+        <Bot
+          className={`w-6 h-6 text-white ${isAgentOpen ? "animate-pulse" : ""}`}
+        />
+        {!isAgentOpen && (
+          <span className="absolute -top-1 -right-1 bg-[#FFC439] text-[#001435] text-[8px] font-black px-1.5 py-0.5 rounded-full">
+            AI
+          </span>
+        )}
+      </button>
+    </>
   );
 }
